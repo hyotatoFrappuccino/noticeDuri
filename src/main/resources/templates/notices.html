@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <title>Major 선택</title>
+</head>
+<body>
+<h1>Major 선택</h1>
+
+<form action="/notices" method="post">
+    <label for="major">Major 선택:</label>
+    <select id="major" name="major">
+        <option value="">-- Major 선택 --</option>
+        <option th:each="major : ${majors}" th:value="${major.id}" th:text="${major.name}"></option>
+    </select>
+    <button type="submit">제출</button>
+</form>
+
+<!-- Notice 리스트 표시 -->
+<div th:if="${notices != null}">
+    <h2>공지사항 리스트</h2>
+    <ul>
+        <li th:each="notice : ${notices}">
+            <span th:text="${notice.title}">제목</span> -
+            <span th:text="${notice.uploadedDate}">날짜</span> -
+            <a th:href="${notice.url}" th:text="${notice.url}">링크</a>
+        </li>
+    </ul>
+</div>
+</body>
+</html>

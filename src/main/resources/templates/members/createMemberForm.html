@@ -1,0 +1,84 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org" lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <title>회원 가입</title>
+    <style>
+        .fieldError {
+            border-color: #bd2130;
+        }
+    </style>
+    <script>
+        function loadMajors(universityId) {
+            const majorSelect = document.getElementById("majorId");
+            majorSelect.innerHTML = ""; // 기존 옵션 제거
+
+            if (universityId) {
+                fetch(`/majors/${universityId}`)
+                    .then(response => response.json())
+                    .then(data => {
+                        const defaultOption = document.createElement("option");
+                        defaultOption.value = "";
+                        defaultOption.textContent = "학과선택";
+                        majorSelect.appendChild(defaultOption);
+
+                        data.forEach(major => {
+                            const option = document.createElement("option");
+                            option.value = major.id;
+                            option.textContent = major.name;
+                            majorSelect.appendChild(option);
+                        });
+                    })
+                    .catch(error => console.error('Error loading majors:', error));
+            } else {
+                const defaultOption = document.createElement("option");
+                defaultOption.value = "";
+                defaultOption.textContent = "학과선택";
+                majorSelect.appendChild(defaultOption);
+            }
+        }
+    </script>
+</head>
+<body>
+
+<div class="container">
+    <h1>회원 가입</h1>
+
+    <form role="form" action="/members/new" th:object="${form}" method="post">
+        <!-- 이름 입력 필드 -->
+        <div class="form-group">
+            <label th:for="name">이름</label>
+            <label>
+                <input type="text" th:field="*{name}" class="form-control" placeholder="이름을 입력하세요"
+                       th:class="${#fields.hasErrors('name')}? 'form-control fieldError' : 'form-control'">
+            </label>
+            <p th:if="${#fields.hasErrors('name')}" th:errors="*{name}">Incorrect name</p>
+        </div>
+
+        <!-- 대학 선택 필드 -->
+        <div class="form-group">
+            <label for="universityId">대학명</label>
+            <select th:field="*{universityId}" id="universityId" class="form-control" onchange="loadMajors(this.value)">
+                <option value="">대학선택</option>
+                <option th:each="university : ${universities}" th:value="${university.id}"
+                        th:text="${university.name}"></option>
+            </select>
+        </div>
+
+        <!-- 학과 선택 필드 -->
+        <div class="form-group">
+            <label for="majorId">학과명</label>
+            <select th:field="*{majorId}" id="majorId" class="form-control">
+                <option value="">학과선택</option>
+            </select>
+        </div>
+
+        <!-- 제출 버튼 -->
+        <button type="submit" class="btn btn-primary">회원 가입</button>
+    </form>
+
+</div> <!-- /container -->
+
+</body>
+</html>
+
