@@ -1,12 +1,10 @@
 package com.studioyunseul.noticeduri.entity.dto;
 
-import lombok.Getter;
-import lombok.Setter;
+import lombok.Data;
 
-@Getter
-@Setter
+@Data
 public class UniversityDto {
-    private Long id;
-    private String name;
+    private final Long id;
+    private final String name;
 }
 
