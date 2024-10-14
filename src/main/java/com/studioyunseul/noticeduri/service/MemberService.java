@@ -19,7 +19,10 @@ public class MemberService {
     @Transactional
     public Long join(MemberForm memberForm) {
         String name = memberForm.getName();
-        Major major = majorRepository.findById(memberForm.getMajorId()).get();
-        return memberRepository.save(new Member(name, major)).getId();
+        String password = memberForm.getPassword();
+        Major major = majorRepository.findById(memberForm.getMajorId()).orElseThrow(() -> new IllegalArgumentException("Major not found"));
+
+        Member member = new Member(name, major, password);
+        return memberRepository.save(member).getId();
     }
 }

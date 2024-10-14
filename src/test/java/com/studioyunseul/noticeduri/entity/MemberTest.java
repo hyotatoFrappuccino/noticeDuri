@@ -46,8 +46,8 @@ class MemberTest {
         em.persist(major2);
         em.persist(major3);
 
-        Member member1 = new Member("hyojae", major1);
-        Member member2 = new Member("dahui", major3);
+        Member member1 = new Member("hyojae", major1, "1234");
+        Member member2 = new Member("dahui", major3, "1234");
         memberRepository.save(member1);
         memberRepository.save(member2);
 

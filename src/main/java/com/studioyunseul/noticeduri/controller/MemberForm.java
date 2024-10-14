@@ -1,6 +1,7 @@
 package com.studioyunseul.noticeduri.controller;
 
 import jakarta.validation.constraints.NotEmpty;
+import jakarta.validation.constraints.NotNull;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -8,9 +9,12 @@ import lombok.Setter;
 @Setter
 public class MemberForm {
 
-    @NotEmpty(message = "회원 이름은 필수입니다.")
+    @NotEmpty
     private String name;
-
+    @NotEmpty
+    private String password;
+    @NotNull
     private Long universityId;
+    @NotNull
     private Long majorId;
 }

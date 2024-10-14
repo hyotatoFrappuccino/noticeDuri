@@ -15,6 +15,7 @@ public class Member {
     private Long id;
 
     private String name;
+    private String password;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "university_id")
@@ -24,10 +25,11 @@ public class Member {
     @JoinColumn(name = "major_id")
     private Major major;
 
-    public Member(String name, Major major) {
+    public Member(String name, Major major, String password) {
         this.name = name;
         this.university = major.getUniversity();
         this.major = major;
+        this.password = password;
     }
 
     private void changeMajor(Major major) {
@@ -36,5 +38,9 @@ public class Member {
         this.major.getMembers().add(this);
 
         this.university = major.getUniversity();
+    }
+
+    private void changePassword(String password) {
+        this.password = password;
     }
 }
