@@ -25,4 +25,8 @@ public class MemberService {
         Member member = new Member(name, major, password);
         return memberRepository.save(member).getId();
     }
+
+    public Member login(String name, String password) {
+        return memberRepository.findByNameAndPassword(name, password);
+    }
 }

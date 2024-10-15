@@ -1,5 +1,5 @@
 <!DOCTYPE HTML>
-<html xmlns:th="http://www.thymeleaf.org">
+<html xmlns:th="http://www.thymeleaf.org" lang="ko">
 <head>
     <meta charset="utf-8">
     <link th:href="@{/css/bootstrap.min.css}"
@@ -9,11 +9,12 @@
             max-width: 560px;
         }
 
-        .field-error {
-            border-color: #dc3545;
-            color: #dc3545;
-        }
+        /*.field-error {*/
+        /*    border-color: #dc3545;*/
+        /*    color: #dc3545;*/
+        /*}*/
     </style>
+    <title>알려두리</title>
 </head>
 <body>
 <div class="container">
@@ -30,7 +31,7 @@
         <div class="col">
             <button class="w-100 btn btn-dark btn-lg"
                     onclick="location.href='items.html'"
-                    th:onclick="|location.href='@{/login}'|" type="button">
+                    th:onclick="|location.href='@{/members/login}'|" type="button">
                 로그인
             </button>
         </div>

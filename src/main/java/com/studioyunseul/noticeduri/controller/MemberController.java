@@ -1,13 +1,15 @@
 package com.studioyunseul.noticeduri.controller;
 
 import com.studioyunseul.noticeduri.entity.Major;
+import com.studioyunseul.noticeduri.entity.Member;
 import com.studioyunseul.noticeduri.entity.University;
 import com.studioyunseul.noticeduri.entity.dto.MajorDto;
-import com.studioyunseul.noticeduri.entity.dto.UniversityDto;
 import com.studioyunseul.noticeduri.repository.MajorRepository;
 import com.studioyunseul.noticeduri.repository.MemberRepository;
 import com.studioyunseul.noticeduri.repository.UniversityRepository;
 import com.studioyunseul.noticeduri.service.MemberService;
+import jakarta.servlet.http.Cookie;
+import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
@@ -20,17 +22,45 @@ import java.util.stream.Collectors;
 
 @Controller
 @RequiredArgsConstructor
+@RequestMapping(value = "members")
 public class MemberController {
 
     private final UniversityRepository universityRepository;
     private final MajorRepository majorRepository;
-    private final MemberRepository memberRepository;
     private final MemberService memberService;
+
+    /**
+     * 로그인
+     */
+    @GetMapping("/login")
+    public String loginForm(Model model) {
+        model.addAttribute("form", new LoginForm());
+        return "members/login";
+    }
+
+    @PostMapping("/login")
+    public String login(@Valid @ModelAttribute("form") LoginForm form, BindingResult result, HttpServletResponse response) {
+        if (result.hasErrors()) {
+            return "members/login";
+        }
+
+        Member loginMember = memberService.login(form.getLoginId(), form.getPassword());
+
+        if (loginMember == null) {
+            result.reject("loginFail", "아이디 또는 비밀번호가 맞지 않습니다.");
+            return "members/login";
+        }
+
+        Cookie idCookie = new Cookie("memberId", String.valueOf(loginMember.getId()));
+        response.addCookie(idCookie);
+
+        return "redirect:/";
+    }
 
     /**
      * 회원가입 - Get
      */
-    @GetMapping("/members/new")
+    @GetMapping("/new")
     public String createMemberForm(Model model) {
         List<University> universities = universityRepository.findAllByOrderByNameAsc();
 
@@ -42,10 +72,9 @@ public class MemberController {
 
     /**
      * 회원가입 - Post
-     * @ModelAttribute("form") "form" 안 적으면 오류 남!! 하지만 @ModelAttribute 자체가 생략 가능하므로 생략함.
      */
-    @PostMapping("/members/new")
-    public String createMember(@Valid MemberForm form, BindingResult result) {
+    @PostMapping("/new")
+    public String createMember(@Valid @ModelAttribute("form") MemberForm form, BindingResult result) {
         if (result.hasErrors()) {
             return "members/createMemberForm";
         }
