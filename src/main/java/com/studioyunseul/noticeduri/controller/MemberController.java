@@ -5,7 +5,6 @@ import com.studioyunseul.noticeduri.entity.Member;
 import com.studioyunseul.noticeduri.entity.University;
 import com.studioyunseul.noticeduri.entity.dto.MajorDto;
 import com.studioyunseul.noticeduri.repository.MajorRepository;
-import com.studioyunseul.noticeduri.repository.MemberRepository;
 import com.studioyunseul.noticeduri.repository.UniversityRepository;
 import com.studioyunseul.noticeduri.service.MemberService;
 import jakarta.servlet.http.Cookie;
@@ -52,6 +51,7 @@ public class MemberController {
         }
 
         Cookie idCookie = new Cookie("memberId", String.valueOf(loginMember.getId()));
+        idCookie.setPath("/");
         response.addCookie(idCookie);
 
         return "redirect:/";
@@ -84,6 +84,7 @@ public class MemberController {
         return "redirect:/";
     }
 
+    // 대학별 학과 목록 반환
     @GetMapping("/majors/{universityId}")
     @ResponseBody
     public List<MajorDto> getMajorByUniversity(@PathVariable Long universityId) {

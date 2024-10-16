@@ -9,6 +9,8 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.Optional;
+
 @Service
 @Transactional(readOnly = true)
 @RequiredArgsConstructor
@@ -28,5 +30,9 @@ public class MemberService {
 
     public Member login(String name, String password) {
         return memberRepository.findByNameAndPassword(name, password);
+    }
+
+    public Member findById(Long id) {
+        return memberRepository.findById(id).orElseThrow(() -> new IllegalArgumentException("Member not found"));
     }
 }

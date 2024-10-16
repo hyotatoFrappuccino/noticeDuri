@@ -11,10 +11,14 @@ public class MemberForm {
 
     @NotEmpty
     private String name;
+
     @NotEmpty
     private String password;
+
     @NotNull
     private Long universityId;
+
     @NotNull
     private Long majorId;
+
 }
