@@ -21,6 +21,9 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import static com.studioyunseul.noticeduri.utils.CookieUtil.addMemberCookie;
+import static com.studioyunseul.noticeduri.utils.CookieUtil.expireCookie;
+
 @Controller
 @RequiredArgsConstructor
 @RequestMapping(value = "members")
@@ -56,10 +59,10 @@ public class MemberController {
         return "redirect:/";
     }
 
-    private static void addMemberCookie(HttpServletResponse response, Long memberId) {
-        Cookie idCookie = new Cookie("memberId", String.valueOf(memberId));
-        idCookie.setPath("/");
-        response.addCookie(idCookie);
+    @PostMapping("/logout")
+    public String logout(HttpServletResponse response) {
+        expireCookie(response, "memberId");
+        return "redirect:/";
     }
 
     // 회원가입 - Get

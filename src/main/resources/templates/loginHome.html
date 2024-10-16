@@ -2,29 +2,76 @@
 <html xmlns:th="http://www.thymeleaf.org" lang="ko">
 <head>
     <meta charset="UTF-8">
-    <title>Major 선택</title>
+    <title>알려두리</title>
+    <link th:href="@{/css/bootstrap.min.css}" href="../css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        .welcome-message {
+            margin-top: 20px;
+            font-size: 1.25rem;
+            color: #495057;
+            text-align: center;
+            font-weight: 600;
+        }
+
+        .notice-list {
+            margin-top: 30px;
+        }
+
+        .notice-item {
+            padding: 15px;
+            border: 1px solid #e9ecef;
+            border-radius: 5px;
+            margin-bottom: 10px;
+            background-color: #f8f9fa;
+        }
+
+        .notice-item h5 {
+            font-weight: 600;
+            color: #343a40;
+        }
+
+        .notice-item .date {
+            color: #6c757d;
+            font-size: 0.875rem;
+        }
+
+        .notice-item a {
+            text-decoration: none;
+            color: #007bff;
+        }
+
+        .notice-item a:hover {
+            text-decoration: underline;
+        }
+    </style>
 </head>
 <body>
-<h4 class="mb-3" th:text="${member.major.name} + ' ' + ${member.name} + '님 안녕하세요!'">로그인 사용자 이름</h4>
-<!--<form action="/notices" method="post">-->
-<!--    <label for="major">Major 선택:</label>-->
-<!--    <select id="major" name="major">-->
-<!--        <option value="">&#45;&#45; Major 선택 &#45;&#45;</option>-->
-<!--        <option th:each="major : ${majors}" th:value="${major.id}" th:text="${major.name}"></option>-->
-<!--    </select>-->
-<!--    <button type="submit">제출</button>-->
-<!--</form>-->
+<div class="container">
+    <!-- 상단 네비게이션 -->
+    <nav class="navbar navbar-light bg-light justify-content-between">
+        <span class="navbar-brand mb-0 h1"></span>
+        <form th:action="@{/members/logout}" method="post">
+            <button class="btn btn-outline-danger" type="submit">로그아웃</button>
+        </form>
+    </nav>
 
-<!-- Notice 리스트 표시 -->
-<div th:if="${notices != null}">
-    <h2>공지사항 리스트</h2>
-    <ul>
-        <li th:each="notice : ${notices}">
-            <span th:text="${notice.title}">제목</span> -
-            <span th:text="${notice.uploadedDate}">날짜</span> -
-            <a th:href="${notice.url}" th:text="${notice.url}">링크</a>
-        </li>
-    </ul>
+    <!-- 환영 메시지 -->
+    <h4 class="welcome-message" th:text="${member.major.name} + ' ' + ${member.name} + '님 안녕하세요!'">
+        로그인 사용자 이름
+    </h4>
+
+    <!-- Notice 리스트 표시 -->
+    <div th:if="${notices != null}" class="notice-list">
+        <h2>공지사항 리스트</h2>
+        <div class="list-group">
+            <div th:each="notice : ${notices}" class="notice-item">
+                <h5 th:text="${notice.title}">제목</h5>
+                <span class="date" th:text="${notice.uploadedDate}">날짜</span>
+                <br>
+                <a th:href="${notice.url}" th:text="${notice.url}">링크</a>
+            </div>
+        </div>
+    </div>
 </div>
 </body>
 </html>
