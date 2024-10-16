@@ -32,9 +32,8 @@ public class HomeController {
     }
 }
 
-/** todo
+/* todo
  * 홈 화면 - 로그인 후
  * - 로그아웃 기능 추가
- *
  * 공지관리?
  */
