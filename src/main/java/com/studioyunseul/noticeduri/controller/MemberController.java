@@ -1,5 +1,7 @@
 package com.studioyunseul.noticeduri.controller;
 
+import com.studioyunseul.noticeduri.controller.form.LoginForm;
+import com.studioyunseul.noticeduri.controller.form.MemberForm;
 import com.studioyunseul.noticeduri.entity.Major;
 import com.studioyunseul.noticeduri.entity.Member;
 import com.studioyunseul.noticeduri.entity.University;
@@ -28,15 +30,14 @@ public class MemberController {
     private final MajorRepository majorRepository;
     private final MemberService memberService;
 
-    /**
-     * 로그인
-     */
+    // 로그인 - Get
     @GetMapping("/login")
-    public String loginForm(Model model) {
+    public String login(Model model) {
         model.addAttribute("form", new LoginForm());
         return "members/login";
     }
 
+    // 로그인 - Post
     @PostMapping("/login")
     public String login(@Valid @ModelAttribute("form") LoginForm form, BindingResult result, HttpServletResponse response) {
         if (result.hasErrors()) {
@@ -57,11 +58,9 @@ public class MemberController {
         return "redirect:/";
     }
 
-    /**
-     * 회원가입 - Get
-     */
+    // 회원가입 - Get
     @GetMapping("/new")
-    public String createMemberForm(Model model) {
+    public String createMember(Model model) {
         List<University> universities = universityRepository.findAllByOrderByNameAsc();
 
         model.addAttribute("universities", universities);
@@ -70,9 +69,7 @@ public class MemberController {
         return "members/createMemberForm";
     }
 
-    /**
-     * 회원가입 - Post
-     */
+    // 회원가입 - Post
     @PostMapping("/new")
     public String createMember(@Valid @ModelAttribute("form") MemberForm form, BindingResult result) {
         if (result.hasErrors()) {
@@ -84,10 +81,9 @@ public class MemberController {
         return "redirect:/";
     }
 
-    // 대학별 학과 목록 반환
     @GetMapping("/majors/{universityId}")
     @ResponseBody
-    public List<MajorDto> getMajorByUniversity(@PathVariable Long universityId) {
+    public List<MajorDto> getMajorsByUniversity(@PathVariable Long universityId) {
         List<Major> majors = majorRepository.findByUniversityId(universityId);
         return majors.stream().map(major -> new MajorDto(major.getId(), major.getName())).collect(Collectors.toList());
     }

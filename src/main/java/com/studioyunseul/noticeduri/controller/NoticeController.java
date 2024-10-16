@@ -23,11 +23,8 @@ public class NoticeController {
     private final NoticeRepository noticeRepository;
     private final UniversityRepository universityRepository;
 
-    /**
-     * 공지사항 리스트 출력 - Get
-     */
     @GetMapping("/notices")
-    public String notices(Model model) {
+    public String getNotices(Model model) {
         List<Major> all = majorRepository.findAll();
         List<University> universities = universityRepository.findAllByOrderByNameAsc();
         model.addAttribute("majors", all);
@@ -35,11 +32,8 @@ public class NoticeController {
         return "loginHome";
     }
 
-    /**
-     * 공지사항 리스트 출력 - Post
-     */
     @PostMapping("/notices")
-    public String notices(@ModelAttribute Major major, Model model) {
+    public String getNotices(@ModelAttribute Major major, Model model) {
         List<Major> all = majorRepository.findAll();
         model.addAttribute("majors", all);
 

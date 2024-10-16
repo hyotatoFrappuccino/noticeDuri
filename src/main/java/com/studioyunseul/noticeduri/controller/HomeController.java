@@ -16,6 +16,7 @@ public class HomeController {
     private final MemberService memberService;
     private final NoticeRepository noticeRepository;
 
+    // 홈 화면
     @GetMapping("/")
     public String home(@CookieValue(name = "memberId", required = false) Long memberId, Model model) {
         if (memberId == null) {
@@ -31,15 +32,9 @@ public class HomeController {
     }
 }
 
-/**todo
- * 로그인 요구사항
- *
+/** todo
  * 홈 화면 - 로그인 후
- * - 이름, 공지 조회(멤버 학과에 맞게), 로그아웃
+ * - 로그아웃 기능 추가
  *
- * 보안 요구사항
- * - 로그인 사용자만 공지 조회를 할 수 있음. 로그인되어 있지 않은데 접근 시 로그인 화면으로 이동
- *
- * 회원가입
- * 공지관리
+ * 공지관리?
  */

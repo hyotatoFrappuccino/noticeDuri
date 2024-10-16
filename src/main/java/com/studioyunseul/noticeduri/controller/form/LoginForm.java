@@ -1,4 +1,4 @@
-package com.studioyunseul.noticeduri.controller;
+package com.studioyunseul.noticeduri.controller.form;
 
 import jakarta.validation.constraints.NotEmpty;
 import lombok.Getter;

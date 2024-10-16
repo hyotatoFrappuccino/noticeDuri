@@ -1,6 +1,6 @@
 package com.studioyunseul.noticeduri.service;
 
-import com.studioyunseul.noticeduri.controller.MemberForm;
+import com.studioyunseul.noticeduri.controller.form.MemberForm;
 import com.studioyunseul.noticeduri.entity.Major;
 import com.studioyunseul.noticeduri.entity.Member;
 import com.studioyunseul.noticeduri.repository.MajorRepository;
@@ -8,8 +8,6 @@ import com.studioyunseul.noticeduri.repository.MemberRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
-import java.util.Optional;
 
 @Service
 @Transactional(readOnly = true)
