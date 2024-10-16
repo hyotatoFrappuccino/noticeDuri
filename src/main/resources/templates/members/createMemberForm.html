@@ -26,7 +26,7 @@
             majorSelect.innerHTML = ""; // 기존 옵션 제거
 
             if (universityId) {
-                fetch(`/majors/${universityId}`)
+                fetch(`/members/majors/${universityId}`)
                     .then(response => response.json())
                     .then(data => {
                         const option = document.createElement("option");
