@@ -5,16 +5,15 @@
     <title>Major 선택</title>
 </head>
 <body>
-<h1>Major 선택</h1>
-
-<form action="/notices" method="post">
-    <label for="major">Major 선택:</label>
-    <select id="major" name="major">
-        <option value="">-- Major 선택 --</option>
-        <option th:each="major : ${majors}" th:value="${major.id}" th:text="${major.name}"></option>
-    </select>
-    <button type="submit">제출</button>
-</form>
+<h4 class="mb-3" th:text="${member.major.name} + ' ' + ${member.name} + '님 안녕하세요!'">로그인 사용자 이름</h4>
+<!--<form action="/notices" method="post">-->
+<!--    <label for="major">Major 선택:</label>-->
+<!--    <select id="major" name="major">-->
+<!--        <option value="">&#45;&#45; Major 선택 &#45;&#45;</option>-->
+<!--        <option th:each="major : ${majors}" th:value="${major.id}" th:text="${major.name}"></option>-->
+<!--    </select>-->
+<!--    <button type="submit">제출</button>-->
+<!--</form>-->
 
 <!-- Notice 리스트 표시 -->
 <div th:if="${notices != null}">
