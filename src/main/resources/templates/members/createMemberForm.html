@@ -2,23 +2,59 @@
 <html xmlns:th="http://www.thymeleaf.org" lang="ko">
 <head>
     <meta charset="UTF-8">
-    <link th:href="@{/css/bootstrap.min.css}"
-          href="../css/bootstrap.min.css" rel="stylesheet">
-    <title>회원 가입</title>
+    <link th:href="@{/css/bootstrap.min.css}" href="../css/bootstrap.min.css" rel="stylesheet">
+    <title>알려두리 : 회원 가입</title>
     <style>
+        body {
+            background-color: #f8f9fa;
+            font-family: 'Arial', sans-serif;
+        }
+
         .container {
-            max-width: 560px;
+            max-width: 400px;
+            margin-top: 50px;
+            background-color: #ffffff;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+        }
+
+        h2 {
+            font-weight: bold;
+            color: #343a40;
+        }
+
+        .btn-custom {
+            background-color: #343a40;
+            color: #ffffff;
+            border-radius: 5px;
+        }
+
+        .btn-custom:hover {
+            background-color: #495057;
+        }
+
+        .form-group label {
+            color: #495057;
+            font-weight: 600;
+        }
+
+        .form-control {
+            border-radius: 5px;
         }
 
         .field-error {
-            border-color: #dc3545;
             color: #dc3545;
+            font-size: 0.875rem;
         }
 
-        /* 필드 간의 간격 조정 */
-        .form-group {
-            margin-bottom: 15px;
+        .footer-text {
+            margin-top: 20px;
+            font-size: 0.9rem;
+            color: #6c757d;
+            text-align: center;
         }
+
     </style>
     <script>
         function loadMajors(universityId) {
@@ -48,62 +84,47 @@
 <body>
 
 <div class="container">
-    <div class="py-5 text-center">
-        <h2>회원 가입</h2>
-    </div>
-
     <form role="form" action="/members/new" th:object="${form}" method="post">
         <!-- 이름 입력 필드 -->
-        <div class="form-group">
+        <div class="form-group mb-3">
             <label for="loginId">이름</label>
-            <label>
-            <input type="text" id="loginId" th:field="*{name}" class="form-control" placeholder="이름을 입력하세요"
-                   th:errorclass="field-error">
-            </label>
+            <input type="text" id="loginId" th:field="*{name}" class="form-control" placeholder="이름을 입력하세요" required>
             <div class="field-error" th:errors="*{name}"></div>
         </div>
 
         <!-- 비밀번호 입력 필드 -->
-        <div class="form-group">
+        <div class="form-group mb-3">
             <label for="password">비밀번호</label>
-            <label>
             <input type="password" id="password" th:field="*{password}" class="form-control" placeholder="비밀번호를 입력하세요"
-                   th:errorclass="field-error">
-            </label>
+                   required>
             <div class="field-error" th:errors="*{password}"></div>
-            <!-- 보안 안내 문구 추가 -->
-            <p>=> 비밀번호 보안 안되니까 1234로 하세요</p>
+            <small class="text-muted">비밀번호 보안이 중요합니다. 안전한 비밀번호를 사용하세요.</small>
         </div>
 
-
         <!-- 대학 선택 필드 -->
-        <div class="form-group">
+        <div class="form-group mb-3">
             <label for="universityId">대학</label>
-            <label>
             <select th:field="*{universityId}" id="universityId" class="form-control" onchange="loadMajors(this.value)">
                 <option value="">선택해주세요.</option>
                 <option th:each="university : ${universities}" th:value="${university.id}"
                         th:text="${university.name}"></option>
             </select>
-            </label>
         </div>
 
         <!-- 학과 선택 필드 -->
-        <div class="form-group">
+        <div class="form-group mb-4">
             <label for="majorId">학과</label>
-            <label>
             <select th:field="*{majorId}" id="majorId" class="form-control">
                 <option value="">선택해주세요.</option>
             </select>
-            </label>
         </div>
 
         <!-- 제출 버튼 -->
-        <button type="submit" class="btn btn-primary">회원 가입</button>
+        <div class="d-grid gap-2">
+            <button type="submit" class="btn btn-custom btn-lg">회원 가입</button>
+        </div>
     </form>
-
-</div> <!-- /container -->
+</div>
 
 </body>
 </html>
-

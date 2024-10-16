@@ -22,7 +22,7 @@ public class HomeController {
     @GetMapping("/")
     public String home(@CookieValue(name = "memberId", required = false) Long memberId, Model model, HttpServletResponse response) {
         if (memberId == null) {
-            return "home";
+            return "redirect:/members/login";
         }
 
         // 로그인
@@ -31,7 +31,7 @@ public class HomeController {
         // 쿠키의 값이 변조된 경우
         if (loginMember == null) {
             expireCookie(response, "memberId");
-            return "redirect:/";
+            return "redirect:/members/login";
         }
         model.addAttribute("member", loginMember);
         model.addAttribute("notices", noticeRepository.findByMajor(loginMember.getMajor()));
