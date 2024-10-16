@@ -51,11 +51,15 @@ public class MemberController {
             return "members/login";
         }
 
-        Cookie idCookie = new Cookie("memberId", String.valueOf(loginMember.getId()));
-        idCookie.setPath("/");
-        response.addCookie(idCookie);
+        addMemberCookie(response, loginMember.getId());
 
         return "redirect:/";
+    }
+
+    private static void addMemberCookie(HttpServletResponse response, Long memberId) {
+        Cookie idCookie = new Cookie("memberId", String.valueOf(memberId));
+        idCookie.setPath("/");
+        response.addCookie(idCookie);
     }
 
     // 회원가입 - Get
@@ -71,12 +75,14 @@ public class MemberController {
 
     // 회원가입 - Post
     @PostMapping("/new")
-    public String createMember(@Valid @ModelAttribute("form") MemberForm form, BindingResult result) {
+    public String createMember(@Valid @ModelAttribute("form") MemberForm form, BindingResult result, HttpServletResponse response) {
         if (result.hasErrors()) {
             return "members/createMemberForm";
         }
 
-        memberService.join(form);
+        Long memberId = memberService.join(form);
+
+        addMemberCookie(response, memberId);
 
         return "redirect:/";
     }
