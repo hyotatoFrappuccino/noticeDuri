@@ -35,6 +35,8 @@ public class HomeController {
             return "redirect:/members/login";
         }
         model.addAttribute("member", loginMember);
+
+        // 멤버 학과 공지 반환
         model.addAttribute("notices", noticeRepository.findByMajor(loginMember.getMajor()));
 
         return "loginHome";
