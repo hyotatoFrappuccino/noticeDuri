@@ -51,7 +51,7 @@ public class HomeController {
 
         model.addAttribute("notices", noticeService.getNoticesByMajor(pageable, condition));
         // 타 게시판 목록 반환
-        //model.addAttribute("boards", )
+        model.addAttribute("boards", memberService.findAllDistinctMajorNot(loginMember.getUniversity().getId()));
 
         return "loginHome";
     }

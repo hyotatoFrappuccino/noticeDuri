@@ -54,9 +54,9 @@ public class Init {
 
             String[] majors_knu = new String[]{"간호학과", "경영학과", "회계학과", "경제학과", "정보통계학과", "관광경영학과", "국제무역학과", "스마트팜농산업학과", "바이오시스템기계공학", "컴퓨터공학과"};
             for (String major : majors_knu) {
-                em.persist(new Major(major, univ_knu));
+                em.persist(new Major(major, univ_knu, true));
             }
-            Major major3 = new Major("중어중문학과", university2);
+            Major major3 = new Major("중어중문학과", university2, true);
             em.persist(major3);
 
             Member member1 = new Member("hyojae", major3, "1234");
@@ -70,6 +70,9 @@ public class Init {
 
             Notice notice2 = new Notice(major, "공지사항 테스트요 ㅋㅋ", "https://cse.kangwon.ac.kr/cse/community/undergraduate-notice.do?mode=view&articleNo=457851&article.offset=0&articleLimit=10#!/list", LocalDateTime.now());
             em.persist(notice2);
+
+            em.persist(new Major("학사공지", university2, false));
+            em.persist(new Major("기숙사", university2, false));
 
             List<Notice> notices = new ArrayList<>();
 

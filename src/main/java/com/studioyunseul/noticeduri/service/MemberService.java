@@ -9,6 +9,8 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
+
 @Service
 @Transactional(readOnly = true)
 @RequiredArgsConstructor
@@ -32,5 +34,9 @@ public class MemberService {
 
     public Member findById(Long id) {
         return memberRepository.findById(id).orElse(null);
+    }
+
+    public List<Major> findAllDistinctMajorNot(Long universityId) {
+        return majorRepository.findByIsDistinctMajorFalseAndUniversityId(universityId);
     }
 }
