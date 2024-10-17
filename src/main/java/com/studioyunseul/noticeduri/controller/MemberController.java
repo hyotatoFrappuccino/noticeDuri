@@ -9,7 +9,6 @@ import com.studioyunseul.noticeduri.entity.dto.MajorDto;
 import com.studioyunseul.noticeduri.repository.MajorRepository;
 import com.studioyunseul.noticeduri.repository.UniversityRepository;
 import com.studioyunseul.noticeduri.service.MemberService;
-import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;

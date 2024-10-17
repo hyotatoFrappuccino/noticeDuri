@@ -15,6 +15,9 @@ import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
+import java.util.List;
 
 @Profile("local")
 @Component
@@ -67,6 +70,30 @@ public class Init {
 
             Notice notice2 = new Notice(major, "공지사항 테스트요 ㅋㅋ", "https://cse.kangwon.ac.kr/cse/community/undergraduate-notice.do?mode=view&articleNo=457851&article.offset=0&articleLimit=10#!/list", LocalDateTime.now());
             em.persist(notice2);
+
+            List<Notice> notices = new ArrayList<>();
+
+            notices.add(new Notice(major3, "2024학년도 진로탐색 프로그램 「진로지도」참여 학생 모집 안내","https://cse.kangwon.ac.kr/cse/community/undergraduate-notice.do?mode=view&articleNo=458620&article.offset=0&articleLimit=10", LocalDateTime.of(2024, 1, 1, 0, 0)));
+            notices.add(new Notice(major3,"[LINC3.0사업단]한국수력원자력㈜과 함께하는 지역사회 문제해결 수력 아이디어톤 모집 안내",  "https://cse.kangwon.ac.kr/cse/community/undergraduate-notice.do?mode=view&articleNo=458562&article.offset=0&articleLimit=10#!/list", LocalDateTime.of(2024, 1, 2, 0, 0)));
+            notices.add(new Notice(major3,"2024학년도 전기 졸업대상자 예비졸업사정 상담 실시 안내", "https://cse.kangwon.ac.kr/cse/community/undergraduate-notice.do?mode=view&articleNo=458419&article.offset=0&articleLimit=10#!/list", LocalDateTime.of(2024, 1, 3, 0, 0)));
+            notices.add(new Notice(major3,"2024년도 10월 교내 학생지원 프로그램 안내", "https://cse.kangwon.ac.kr/cse/community/undergraduate-notice.do?mode=view&articleNo=457851&article.offset=0&articleLimit=10#!/list", LocalDateTime.of(2024, 1, 4, 0, 0)));
+            notices.add(new Notice(major3,"2024-2학기 전공 수업 활동 보조 TA 모집 안내(추가)", "https://cse.kangwon.ac.kr/cse/community/undergraduate-notice.do?mode=view&articleNo=457700&article.offset=0&articleLimit=10#!/list", LocalDateTime.of(2024, 1, 5, 0, 0)));
+            notices.add(new Notice(major3,"제29회 지식재산능력시험(IPAT) 대비 특강 안내", "https://cse.kangwon.ac.kr/cse/community/undergraduate-notice.do?mode=view&articleNo=457552&article.offset=0&articleLimit=10#!/list", LocalDateTime.of(2024, 1, 6, 0, 0)));
+            notices.add(new Notice(major3,"LINC 3.0 취업 성공 동아리 모집 안내", "https://cse.kangwon.ac.kr/cse/community/undergraduate-notice.do?mode=view&articleNo=457456&article.offset=0&articleLimit=10#!/list", LocalDateTime.of(2024, 1, 7, 0, 0)));
+            notices.add(new Notice(major3,"2024학년도 Study Buddy 프로그램 안내", "https://cse.kangwon.ac.kr/cse/community/undergraduate-notice.do?mode=view&articleNo=457156&article.offset=0&articleLimit=10#!/list", LocalDateTime.of(2024, 1, 8, 0, 0)));
+            notices.add(new Notice(major3,"2024-2학기 전공 수업 활동 보조 TA 모집 안내",  "https://cse.kangwon.ac.kr/cse/community/undergraduate-notice.do?mode=view&articleNo=456658&article.offset=0&articleLimit=10#!/list", LocalDateTime.of(2024, 1, 9, 0, 0)));
+
+            LocalDateTime startDate = LocalDateTime.of(2023, 5, 1, 0, 0);
+            for (int i = 0; i < 100; i++) {
+                String title = "임의 공지사항 제목 " + (i + 1);
+                LocalDateTime date = startDate.plusDays(i);
+                String url = "https://example.com/notice/" + (i + 1);
+                notices.add(new Notice(major3, title, url, date));
+            }
+
+            for (Notice notice1 : notices) {
+                em.persist(notice1);
+            }
         }
     }
 }
