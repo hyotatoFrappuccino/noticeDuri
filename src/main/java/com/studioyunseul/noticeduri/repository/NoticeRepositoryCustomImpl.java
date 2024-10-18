@@ -31,7 +31,7 @@ public class NoticeRepositoryCustomImpl implements NoticeRepositoryCustom {
                 .select(new QNoticeDto(notice.title, notice.uploadedDate, notice.url))
                 .from(notice)
                 .where(majorEq(condition.getMajorId()),
-                        titleEq(condition.getTitle()),
+                        titleContains(condition.getTitle()),
                         dateBetween(condition.getStartDate(), condition.getEndDate())
                 )
                 .orderBy(notice.uploadedDate.desc())
@@ -52,8 +52,8 @@ public class NoticeRepositoryCustomImpl implements NoticeRepositoryCustom {
         return majorId != null ? notice.major.id.eq(majorId) : null;
     }
 
-    private BooleanExpression titleEq(String title) {
-        return hasText(title) ? notice.title.eq(title) : null;
+    private BooleanExpression titleContains(String title) {
+        return hasText(title) ? notice.title.contains(title) : null;
     }
 
     private BooleanExpression dateBetween(LocalDateTime startDate, LocalDateTime endDate) {

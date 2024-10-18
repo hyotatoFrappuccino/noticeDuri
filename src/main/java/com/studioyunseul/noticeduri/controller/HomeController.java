@@ -33,7 +33,6 @@ public class HomeController {
 
         // 로그인
         MemberDto loginMember = memberService.findById(memberId);
-
         model.addAttribute("member", loginMember);
 
         // 멤버 학과 공지 반환

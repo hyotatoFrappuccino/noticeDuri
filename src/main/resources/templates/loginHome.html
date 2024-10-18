@@ -95,7 +95,7 @@
     </div>
 
     <script>
-        const majorId = /*[[${member.major.id}]]*/ 0; // 0은 기본값으로, member.major.id가 null 인 경우 대체 값입니다.
+        const majorId = /*[[${member.getMajor()}]]*/ 0; // 0은 기본값으로, member.major.id가 null 인 경우 대체 값입니다.
         document.getElementById('loadMore').addEventListener('click', function () {
             const button = this;
             const page = parseInt(button.getAttribute('data-page')) + 1;
