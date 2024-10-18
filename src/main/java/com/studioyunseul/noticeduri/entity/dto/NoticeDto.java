@@ -7,9 +7,9 @@ import java.time.LocalDateTime;
 
 @Data
 public class NoticeDto {
-    private final String title;
-    private final LocalDateTime noticeDate;
-    private final String url;
+    private String title;
+    private LocalDateTime noticeDate;
+    private String url;
 
     @QueryProjection
     public NoticeDto(String title, LocalDateTime noticeDate, String url) {
