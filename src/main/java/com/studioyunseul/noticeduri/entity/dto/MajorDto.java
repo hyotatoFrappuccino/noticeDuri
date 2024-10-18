@@ -6,4 +6,9 @@ import lombok.Data;
 public class MajorDto {
     private Long id;
     private String name;
+
+    public MajorDto(Long id, String name) {
+        this.id = id;
+        this.name = name;
+    }
 }

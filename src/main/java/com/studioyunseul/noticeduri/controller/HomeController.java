@@ -1,8 +1,7 @@
 package com.studioyunseul.noticeduri.controller;
 
-import com.studioyunseul.noticeduri.entity.Member;
+import com.studioyunseul.noticeduri.entity.dto.MemberDto;
 import com.studioyunseul.noticeduri.entity.dto.NoticeDto;
-import com.studioyunseul.noticeduri.repository.NoticeRepository;
 import com.studioyunseul.noticeduri.repository.NoticeSearchCondition;
 import com.studioyunseul.noticeduri.service.MemberService;
 import com.studioyunseul.noticeduri.service.NoticeService;
@@ -17,8 +16,6 @@ import org.springframework.web.bind.annotation.CookieValue;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
-
-import static com.studioyunseul.noticeduri.utils.CookieUtil.expireCookie;
 
 @Controller
 @RequiredArgsConstructor
@@ -35,23 +32,17 @@ public class HomeController {
         }
 
         // 로그인
-        Member loginMember = memberService.findById(memberId);
+        MemberDto loginMember = memberService.findById(memberId);
 
-        // 쿠키의 값이 변조된 경우
-        if (loginMember == null) {
-            expireCookie(response, "memberId");
-            return "redirect:/members/login";
-        }
         model.addAttribute("member", loginMember);
 
         // 멤버 학과 공지 반환
         NoticeSearchCondition condition = new NoticeSearchCondition();
-        condition.setMajorId(loginMember.getMajor().getId());
-
+        condition.setMajorId(loginMember.getMajor());
 
         model.addAttribute("notices", noticeService.getNoticesByMajor(pageable, condition));
         // 타 게시판 목록 반환
-        model.addAttribute("boards", memberService.findAllDistinctMajorNot(loginMember.getUniversity().getId()));
+        model.addAttribute("boards", memberService.findAllDistinctMajorNot(loginMember.getMajor(), loginMember.getUniversity()));
 
         return "loginHome";
     }

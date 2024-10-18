@@ -8,4 +8,11 @@ public class MemberDto {
     private String name;
     private Long university;
     private Long major;
+
+    public MemberDto(Long id, String name, Long university, Long major) {
+        this.id = id;
+        this.name = name;
+        this.university = university;
+        this.major = major;
+    }
 }

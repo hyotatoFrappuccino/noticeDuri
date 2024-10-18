@@ -51,7 +51,7 @@
     <nav class="navbar navbar-light bg-light justify-content-between">
         <div class="navbar-left">
             <!-- member.major.name 버튼 -->
-            <button class="btn btn-outline-primary" th:text="${member.major.name}" type="button"></button>
+<!--            <button class="btn btn-outline-primary" th:text="${member.major.name}" type="button"></button>-->
 
             <!-- boards 리스트로 받은 항목들을 버튼으로 하나씩 추가 -->
             <span th:each="major : ${boards}">
@@ -67,7 +67,7 @@
 
 
     <!-- 환영 메시지 -->
-    <h4 class="welcome-message" th:text="${member.major.name} + ' ' + ${member.name} + '님 안녕하세요!'">
+    <h4 class="welcome-message" th:text="${member.name} + '님 안녕하세요!'">
         로그인 사용자 이름
     </h4>
 

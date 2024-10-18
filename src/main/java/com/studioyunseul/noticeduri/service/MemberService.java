@@ -3,12 +3,15 @@ package com.studioyunseul.noticeduri.service;
 import com.studioyunseul.noticeduri.controller.form.MemberForm;
 import com.studioyunseul.noticeduri.entity.Major;
 import com.studioyunseul.noticeduri.entity.Member;
+import com.studioyunseul.noticeduri.entity.dto.MemberDto;
+import com.studioyunseul.noticeduri.exception.MemberNotFound;
 import com.studioyunseul.noticeduri.repository.MajorRepository;
 import com.studioyunseul.noticeduri.repository.MemberRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -32,11 +35,20 @@ public class MemberService {
         return memberRepository.findByNameAndPassword(name, password);
     }
 
-    public Member findById(Long id) {
-        return memberRepository.findById(id).orElse(null);
+    public MemberDto findById(Long id) {
+        Member member = memberRepository.findById(id).orElseThrow(MemberNotFound::new);
+        return convertToDto(member);
     }
 
-    public List<Major> findAllDistinctMajorNot(Long universityId) {
-        return majorRepository.findByIsDistinctMajorFalseAndUniversityId(universityId);
+    public List<Major> findAllDistinctMajorNot(Long majorId, Long universityId) {
+        List<Major> list = new ArrayList<>();
+        list.add(majorRepository.findById(majorId).orElse(null));
+        list.addAll(majorRepository.findByIsDistinctMajorFalseAndUniversityId(universityId));
+
+        return list;
+    }
+
+    private MemberDto convertToDto(Member member) {
+        return new MemberDto(member.getId(), member.getName(), member.getUniversity().getId(), member.getMajor().getId());
     }
 }
