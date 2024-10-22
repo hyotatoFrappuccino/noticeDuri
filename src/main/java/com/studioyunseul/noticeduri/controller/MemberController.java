@@ -2,10 +2,12 @@ package com.studioyunseul.noticeduri.controller;
 
 import com.studioyunseul.noticeduri.controller.form.LoginForm;
 import com.studioyunseul.noticeduri.controller.form.MemberForm;
+import com.studioyunseul.noticeduri.controller.form.MemberUpdateForm;
 import com.studioyunseul.noticeduri.entity.Major;
 import com.studioyunseul.noticeduri.entity.Member;
 import com.studioyunseul.noticeduri.entity.University;
 import com.studioyunseul.noticeduri.entity.dto.MajorDto;
+import com.studioyunseul.noticeduri.entity.dto.MemberDto;
 import com.studioyunseul.noticeduri.repository.MajorRepository;
 import com.studioyunseul.noticeduri.repository.UniversityRepository;
 import com.studioyunseul.noticeduri.service.MemberService;
@@ -89,10 +91,48 @@ public class MemberController {
         return "redirect:/";
     }
 
+    @GetMapping("/myPage")
+    public String myPage(@CookieValue(name = "memberId", required = false) Long memberId, Model model) {
+        if (memberId == null) {
+            return "redirect:/members/login";
+        }
+
+        MemberDto loginMember = memberService.findById(memberId);
+
+        MemberUpdateForm form = new MemberUpdateForm();
+        form.setId(loginMember.getId());
+        form.setName(loginMember.getName());
+        form.setUniversityId(loginMember.getUniversity());
+        form.setMajorId(loginMember.getMajor());
+
+        model.addAttribute("form", form);
+
+        List<University> universities = universityRepository.findAllByOrderByNameAsc();
+        model.addAttribute("universities", universities);
+
+        if (loginMember.getUniversity() != null) {
+            List<Major> majors = majorRepository.findByIsDistinctMajorTrueAndUniversityId(loginMember.getUniversity());
+            model.addAttribute("majors", majors);
+        }
+
+        return "members/myPage";
+    }
+
+    @PostMapping("/myPage")
+    public String myPage(@Valid @ModelAttribute("form") MemberUpdateForm form, BindingResult result) {
+        if (result.hasErrors()) {
+            return "members/myPage";
+        }
+
+        memberService.update(form);
+
+        return "redirect:/";
+    }
+
     @GetMapping("/majors/{universityId}")
     @ResponseBody
     public List<MajorDto> getMajorsByUniversity(@PathVariable Long universityId) {
-        List<Major> majors = majorRepository.findByUniversityId(universityId);
+        List<Major> majors = majorRepository.findByIsDistinctMajorTrueAndUniversityId(universityId);
         return majors.stream().map(major -> new MajorDto(major.getId(), major.getName())).collect(Collectors.toList());
     }
 }

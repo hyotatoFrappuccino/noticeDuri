@@ -8,4 +8,5 @@ import java.util.List;
 public interface MajorRepository extends JpaRepository<Major, Long> {
     List<Major> findByUniversityId(Long universityId);
     List<Major> findByIsDistinctMajorFalseAndUniversityId(Long universityId);
+    List<Major> findByIsDistinctMajorTrueAndUniversityId(Long universityId);
 }
