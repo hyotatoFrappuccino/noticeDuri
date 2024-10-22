@@ -5,9 +5,9 @@ import com.studioyunseul.noticeduri.controller.form.MemberForm;
 import com.studioyunseul.noticeduri.controller.form.MemberUpdateForm;
 import com.studioyunseul.noticeduri.entity.Major;
 import com.studioyunseul.noticeduri.entity.Member;
+import com.studioyunseul.noticeduri.entity.University;
 import com.studioyunseul.noticeduri.entity.dto.MajorDto;
 import com.studioyunseul.noticeduri.entity.dto.MemberDto;
-import com.studioyunseul.noticeduri.entity.dto.UniversityDto;
 import com.studioyunseul.noticeduri.repository.MajorRepository;
 import com.studioyunseul.noticeduri.repository.UniversityRepository;
 import com.studioyunseul.noticeduri.service.MemberService;
@@ -69,7 +69,7 @@ public class MemberController {
     // 회원가입 - Get
     @GetMapping("/new")
     public String createMember(Model model) {
-        List<UniversityDto> universities = universityRepository.findAllByOrderByNameAsc();
+        List<University> universities = universityRepository.findAllByOrderByNameAsc();
 
         model.addAttribute("universities", universities);
         model.addAttribute("form", new MemberForm());
@@ -107,7 +107,7 @@ public class MemberController {
 
         model.addAttribute("form", form);
 
-        List<UniversityDto> universities = universityRepository.findAllByOrderByNameAsc();
+        List<University> universities = universityRepository.findAllByOrderByNameAsc();
         model.addAttribute("universities", universities);
 
         if (loginMember.getUniversity() != null) {
