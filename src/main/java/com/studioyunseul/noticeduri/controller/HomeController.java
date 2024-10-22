@@ -26,7 +26,7 @@ public class HomeController {
 
     // 홈 화면
     @GetMapping("/")
-    public String home(@CookieValue(name = "memberId", required = false) Long memberId, Model model, HttpServletResponse response, Pageable pageable) {
+    public String home(@CookieValue(name = "memberId", required = false) Long memberId, Model model, Pageable pageable) {
         if (memberId == null) {
             return "redirect:/members/login";
         }
