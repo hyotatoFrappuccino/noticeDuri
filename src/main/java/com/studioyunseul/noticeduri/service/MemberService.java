@@ -40,6 +40,11 @@ public class MemberService {
         return convertToDto(member);
     }
 
+//    @Transactional
+//    public Long update(MemberForm memberForm) {
+//        majorRepository.findById()
+//    }
+
     public List<Major> findAllDistinctMajorNot(Long majorId, Long universityId) {
         List<Major> list = new ArrayList<>();
         list.add(majorRepository.findById(majorId).orElse(null));
