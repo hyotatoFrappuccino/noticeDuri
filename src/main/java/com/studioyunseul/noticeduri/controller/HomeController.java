@@ -38,8 +38,8 @@ public class HomeController {
         // 멤버 학과 공지 반환
         NoticeSearchCondition condition = new NoticeSearchCondition();
         condition.setMajorId(loginMember.getMajor());
-
         model.addAttribute("notices", noticeService.getNoticesByMajor(pageable, condition));
+
         // 타 게시판 목록 반환
         model.addAttribute("boards", memberService.findAllDistinctMajorNot(loginMember.getMajor(), loginMember.getUniversity()));
 
@@ -57,7 +57,3 @@ public class HomeController {
     }
 
 }
-
-/* todo
- * 공지관리?
- */

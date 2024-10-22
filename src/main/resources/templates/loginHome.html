@@ -5,58 +5,106 @@
     <title>알려두리</title>
     <link th:href="@{/css/bootstrap.min.css}" href="../css/bootstrap.min.css" rel="stylesheet">
     <style>
-        .welcome-message {
-            margin-top: 20px;
-            font-size: 1.25rem;
-            color: #495057;
-            text-align: center;
-            font-weight: 600;
-        }
-
-        .notice-list {
-            margin-top: 30px;
-        }
-
-        .notice-item {
-            padding: 15px;
-            border: 1px solid #e9ecef;
-            border-radius: 5px;
-            margin-bottom: 10px;
-            background-color: #f8f9fa;
-        }
-
-        .notice-item h5 {
-            font-weight: 600;
+        body {
+            background-color: #f4f6f8;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
             color: #343a40;
         }
 
+        .navbar {
+            background-color: #ffffff;
+            border-bottom: 1px solid #e9ecef;
+            padding: 10px 20px;
+        }
+
+        .navbar-left button {
+            margin-right: 10px;
+        }
+
+        .welcome-message {
+            margin-top: 20px;
+            font-size: 1.5rem;
+            color: #495057;
+            text-align: center;
+            font-weight: bold;
+        }
+
+        .notice-list {
+            margin-top: 40px;
+        }
+
+        .notice-item {
+            padding: 20px;
+            border: 1px solid #dee2e6;
+            border-radius: 8px;
+            margin-bottom: 15px;
+            background-color: #ffffff;
+            transition: box-shadow 0.2s;
+        }
+
+        .notice-item:hover {
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        .notice-item h5 {
+            font-weight: bold;
+            margin-bottom: 5px;
+        }
+
         .notice-item .date {
-            color: #6c757d;
+            color: #868e96;
             font-size: 0.875rem;
+            margin-bottom: 10px;
         }
 
         .notice-item a {
-            text-decoration: none;
+            font-weight: bold;
             color: #007bff;
         }
 
         .notice-item a:hover {
+            color: #0056b3;
             text-decoration: underline;
+        }
+
+        .btn-primary {
+            background-color: #007bff;
+            border-color: #007bff;
+            transition: background-color 0.2s, border-color 0.2s;
+        }
+
+        .btn-primary:hover {
+            background-color: #0056b3;
+            border-color: #004085;
+        }
+
+        .text-muted {
+            text-align: center;
+            margin-top: 20px;
+            color: #6c757d;
+        }
+
+        .text-left {
+            margin-top: 30px;
+            text-align: left;
+        }
+
+        #loadMore {
+            display: block;
+            margin: 0 auto;
+            padding: 10px 20px;
         }
     </style>
 </head>
 <body>
 <div class="container">
     <!-- 상단 네비게이션 -->
-    <nav class="navbar navbar-light bg-light justify-content-between">
+    <nav class="navbar navbar-light">
         <div class="navbar-left">
-            <!-- member.major.name 버튼 -->
-<!--            <button class="btn btn-outline-primary" th:text="${member.major.name}" type="button"></button>-->
-
             <!-- boards 리스트로 받은 항목들을 버튼으로 하나씩 추가 -->
             <span th:each="major : ${boards}">
-            <button class="btn btn-outline-secondary" th:text="${major.name}" type="button"></button>
-        </span>
+                <button class="btn btn-outline-secondary" th:text="${major.name}" type="button"></button>
+            </span>
         </div>
 
         <!-- 로그아웃 버튼 -->
@@ -64,7 +112,6 @@
             <button class="btn btn-outline-danger" type="submit">로그아웃</button>
         </form>
     </nav>
-
 
     <!-- 환영 메시지 -->
     <h4 class="welcome-message" th:text="${member.name} + '님 안녕하세요!'">
@@ -76,67 +123,22 @@
         <h2>공지사항 목록</h2>
         <div class="list-group">
             <div th:if="${!notices.isEmpty()}">
-                <div th:each="notice : ${notices}" class="notice-item">
-                    <h5 th:text="${notice.getTitle()}">제목</h5>
-                    <span class="date" th:text="${notice.getNoticeDate()}">날짜</span>
-                    <br>
-                    <a th:href="${notice.getUrl()}" th:text="바로가기">링크</a>
+                <div th:each="notice : ${notices}">
+                    <a th:href="${notice.getUrl()}" target="_blank" style="text-decoration: none; color: inherit;">
+                        <div class="notice-item">
+                            <span class="date"
+                                  th:text="${#temporals.format(notice.getNoticeDate(), 'yyyy-MM-dd')}">날짜</span>
+                            <h5 th:text="${notice.getTitle()}"></h5>
+                        </div>
+                    </a>
                 </div>
+
             </div>
             <div th:if="${notices.isEmpty()}" class="text-muted">
                 등록된 공지사항이 없습니다.
             </div>
         </div>
     </div>
-
-    <!-- '더 보기' 버튼 -->
-    <div th:if="${notices.hasNext()}" class="text-left" style="margin-bottom: 30px;">
-        <button type="button" class="btn btn-primary btn-sm" id="loadMore" data-page="0">더 보기</button>
-    </div>
-
-    <script>
-        const majorId = /*[[${member.getMajor()}]]*/ 0; // 0은 기본값으로, member.major.id가 null 인 경우 대체 값입니다.
-        document.getElementById('loadMore').addEventListener('click', function () {
-            const button = this;
-            const page = parseInt(button.getAttribute('data-page')) + 1;
-            // AJAX 요청
-            fetch(`/notices?page=${page}&majorId=${majorId}`)
-                .then(response => response.json())
-                .then(data => {
-                    if (data.content.length > 0) {
-                        const listGroup = document.querySelector('.list-group');
-
-                        // 새로운 공지사항 추가
-                        data.content.forEach(notice => {
-                            const noticeItem = document.createElement('div');
-                            noticeItem.classList.add('notice-item');
-
-                            const formattedDate = '2024-1-1';
-
-                            noticeItem.innerHTML = `
-                            <h5>${notice.title}</h5>
-                            <h5>${formattedDate}</h5>
-                            <br>
-                            <a href="${notice.url}">바로가기</a>
-                        `;
-                            listGroup.appendChild(noticeItem);
-                        });
-
-                        // 페이지 데이터 업데이트
-                        button.setAttribute('data-page', page + "");
-
-                        // 다음 페이지가 없으면 버튼 숨기기
-                        if (data.last) {
-                            button.style.display = 'none';
-                        }
-                    } else {
-                        button.style.display = 'none'; // 데이터가 없으면 버튼 숨기기
-                    }
-                })
-                .catch(error => console.error('Error loading more notices:', error));
-        });
-    </script>
-
 </div>
 </body>
 </html>
