@@ -1,0 +1,140 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org" lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <link th:href="@{/css/bootstrap.min.css}" href="../css/bootstrap.min.css" rel="stylesheet">
+    <title>알려두리 : 마이 페이지</title>
+    <style>
+        body {
+            background-color: #f8f9fa;
+            font-family: 'Arial', sans-serif;
+        }
+
+        .container {
+            max-width: 400px;
+            margin-top: 50px;
+            background-color: #ffffff;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+        }
+
+        h2 {
+            font-weight: bold;
+            color: #343a40;
+        }
+
+        .btn-custom {
+            background-color: #343a40;
+            color: #ffffff;
+            border-radius: 5px;
+        }
+
+        .btn-custom:hover {
+            background-color: #495057;
+        }
+
+        .form-group label {
+            color: #495057;
+            font-weight: 600;
+        }
+
+        .error-message {
+            color: red;
+            font-size: 0.875em;
+            margin-top: 5px;
+        }
+    </style>
+    <script>
+        function validatePassword() {
+            const password = document.getElementById("newPassword").value;
+            const confirmPassword = document.getElementById("confirmPassword").value;
+            const confirmPasswordField = document.getElementById("confirmPassword");
+            const errorMessage = document.getElementById("passwordError");
+            const submitButton = document.getElementById("submitButton");
+
+            if (password) { // 비밀번호가 입력된 경우
+                if (password !== confirmPassword) {
+                    confirmPasswordField.classList.add("is-invalid");
+                    errorMessage.style.display = "block";
+                    submitButton.disabled = true;
+                } else {
+                    confirmPasswordField.classList.remove("is-invalid");
+                    errorMessage.style.display = "none";
+                    submitButton.disabled = false;
+                }
+            } else { // 비밀번호가 입력되지 않은 경우
+                confirmPasswordField.classList.remove("is-invalid");
+                errorMessage.style.display = "none";
+                submitButton.disabled = false;
+            }
+        }
+    </script>
+</head>
+<body>
+
+<div class="container">
+
+    <form role="form" action="/members/myPage" th:object="${form}" method="post">
+        <input type="hidden" th:field="*{id}"/>
+
+        <!-- 이름 -->
+        <div class="form-group mb-3">
+            <label for="name">이름</label>
+            <div class="d-flex align-items-center">
+                <input type="text" id="name" th:field="*{name}" class="form-control me-2">
+            </div>
+        </div>
+
+        <!-- 새로운 비밀번호 입력 필드 -->
+        <div class="form-group mb-3">
+            <label for="newPassword">새로운 비밀번호</label>
+            <input type="password" id="newPassword" th:field="*{password}" class="form-control"
+                   placeholder="새로운 비밀번호를 입력하세요" oninput="validatePassword()">
+        </div>
+
+        <!-- 비밀번호 재입력 필드 -->
+        <div class="form-group mb-3">
+            <label for="confirmPassword">비밀번호 재입력</label>
+            <input type="password" id="confirmPassword" class="form-control" placeholder="비밀번호를 다시 입력하세요"
+                   oninput="validatePassword()">
+            <div id="passwordError" class="error-message" style="display: none;">비밀번호가 일치하지 않습니다.</div>
+        </div>
+
+        <!-- 대학 선택 필드 -->
+        <div class="form-group mb-3">
+            <label for="universityId">대학</label>
+            <select th:field="*{universityId}" id="universityId" class="form-control" onchange="loadMajors(this.value)">
+                <option value="">선택해주세요.</option>
+                <option th:each="university : ${universities}" th:value="${university.id}"
+                        th:text="${university.name}"
+                        th:selected="${form.universityId} == ${university.id}"></option>
+            </select>
+        </div>
+
+        <!-- 학과 선택 필드 -->
+        <div class="form-group mb-4">
+            <label for="majorId">학과</label>
+            <select th:field="*{majorId}" id="majorId" class="form-control">
+                <option value="">선택해주세요.</option>
+                <option th:each="major : ${majors}" th:value="${major.id}"
+                        th:text="${major.name}"
+                        th:selected="${form.majorId} == ${major.id}"></option>
+            </select>
+        </div>
+
+        <!-- 제출 버튼 -->
+        <div class="d-grid gap-2">
+            <button type="submit" id="submitButton" class="btn btn-custom btn-lg">정보 수정</button>
+        </div>
+
+        <!-- 취소 버튼 -->
+        <div class="d-grid gap-2 mt-2">
+            <a href="/" class="btn btn-outline-secondary btn-lg">취소</a>
+        </div>
+
+    </form>
+</div>
+
+</body>
+</html>

@@ -85,10 +85,18 @@
             </span>
         </div>
 
-        <!-- 로그아웃 버튼 -->
-        <form th:action="@{/members/logout}" method="post">
-            <button class="btn btn-outline-danger" type="submit">로그아웃</button>
-        </form>
+        <div class="d-flex">
+            <!-- 로그아웃 버튼 -->
+            <form th:action="@{/members/logout}" method="post">
+                <button class="btn btn-outline-danger" type="submit">로그아웃</button>
+            </form>
+
+            <!-- 마이페이지 버튼 -->
+            <form th:action="@{/members/myPage}" method="get">
+                <button class="btn btn-outline-primary ms-2" type="submit">마이페이지</button> <!-- ms-2는 버튼 간 간격 조절 -->
+            </form>
+        </div>
+
     </nav>
 
     <!-- 환영 메시지 -->
