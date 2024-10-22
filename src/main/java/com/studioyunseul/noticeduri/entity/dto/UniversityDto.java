@@ -6,4 +6,9 @@ import lombok.Data;
 public class UniversityDto {
     private Long id;
     private String name;
+
+    public UniversityDto(Long id, String name) {
+        this.id = id;
+        this.name = name;
+    }
 }
