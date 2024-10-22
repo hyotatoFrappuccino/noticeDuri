@@ -9,12 +9,12 @@ import lombok.Setter;
 @Setter
 public class MemberUpdateForm {
 
+    @NotNull
     private Long id;
 
     @NotEmpty
     private String name;
 
-    @NotEmpty
     private String password;
 
     @NotNull

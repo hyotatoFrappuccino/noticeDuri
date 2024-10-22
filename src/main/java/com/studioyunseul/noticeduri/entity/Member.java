@@ -32,7 +32,11 @@ public class Member {
         this.password = password;
     }
 
-    private void changeMajor(Major major) {
+    public void changeName(String name) {
+        this.name = name;
+    }
+
+    public void changeMajor(Major major) {
         this.major.getMembers().remove(this);
         this.major = major;
         this.major.getMembers().add(this);
@@ -40,7 +44,11 @@ public class Member {
         this.university = major.getUniversity();
     }
 
-    private void changePassword(String password) {
+    public void changeUniversity(University university) {
+        this.university = university;
+    }
+
+    public void changePassword(String password) {
         this.password = password;
     }
 }

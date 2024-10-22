@@ -67,7 +67,10 @@
 <body>
 
 <div class="container">
-    <form role="form" action="/members/update" th:object="${form}" method="post">
+
+    <form role="form" action="/members/myPage" th:object="${form}" method="post">
+        <input type="hidden" th:field="*{id}"/>
+
         <!-- 이름 -->
         <div class="form-group mb-3">
             <label for="name">이름</label>
@@ -80,14 +83,7 @@
         <div class="form-group mb-3">
             <label for="newPassword">새로운 비밀번호</label>
             <input type="password" id="newPassword" th:field="*{password}" class="form-control"
-                   placeholder="새로운 비밀번호를 입력하세요" required>
-        </div>
-
-        <!-- 새로운 비밀번호 재입력 필드 -->
-        <div class="form-group mb-4">
-            <label for="confirmNewPassword">새로운 비밀번호 재입력</label>
-            <input type="password" id="confirmNewPassword" th:field="*{password}" class="form-control"
-                   placeholder="새로운 비밀번호를 다시 입력하세요" required>
+                   placeholder="새로운 비밀번호를 입력하세요">
         </div>
 
         <!-- 대학 선택 필드 -->
@@ -112,11 +108,16 @@
             </select>
         </div>
 
-
         <!-- 제출 버튼 -->
         <div class="d-grid gap-2">
             <button type="submit" class="btn btn-custom btn-lg">정보 수정</button>
         </div>
+
+        <!-- 취소 버튼 -->
+        <div class="d-grid gap-2 mt-2">
+            <a href="/" class="btn btn-outline-secondary btn-lg">취소</a>
+        </div>
+
     </form>
 </div>
 

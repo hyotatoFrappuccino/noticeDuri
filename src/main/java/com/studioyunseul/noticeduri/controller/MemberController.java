@@ -2,6 +2,7 @@ package com.studioyunseul.noticeduri.controller;
 
 import com.studioyunseul.noticeduri.controller.form.LoginForm;
 import com.studioyunseul.noticeduri.controller.form.MemberForm;
+import com.studioyunseul.noticeduri.controller.form.MemberUpdateForm;
 import com.studioyunseul.noticeduri.entity.Major;
 import com.studioyunseul.noticeduri.entity.Member;
 import com.studioyunseul.noticeduri.entity.University;
@@ -98,7 +99,8 @@ public class MemberController {
 
         MemberDto loginMember = memberService.findById(memberId);
 
-        MemberForm form = new MemberForm();
+        MemberUpdateForm form = new MemberUpdateForm();
+        form.setId(loginMember.getId());
         form.setName(loginMember.getName());
         form.setUniversityId(loginMember.getUniversity());
         form.setMajorId(loginMember.getMajor());
@@ -117,12 +119,12 @@ public class MemberController {
     }
 
     @PostMapping("/myPage")
-    public String myPage(@Valid @ModelAttribute("form") MemberForm form, BindingResult result) {
+    public String myPage(@Valid @ModelAttribute("form") MemberUpdateForm form, BindingResult result) {
         if (result.hasErrors()) {
             return "members/myPage";
         }
 
-
+        memberService.update(form);
 
         return "redirect:/";
     }
