@@ -38,28 +38,35 @@
             color: #495057;
             font-weight: 600;
         }
+
+        .error-message {
+            color: red;
+            font-size: 0.875em;
+            margin-top: 5px;
+        }
     </style>
     <script>
-        function loadMajors(universityId) {
-            const majorSelect = document.getElementById("majorId");
-            majorSelect.innerHTML = ""; // 기존 옵션 제거
+        function validatePassword() {
+            const password = document.getElementById("newPassword").value;
+            const confirmPassword = document.getElementById("confirmPassword").value;
+            const confirmPasswordField = document.getElementById("confirmPassword");
+            const errorMessage = document.getElementById("passwordError");
+            const submitButton = document.getElementById("submitButton");
 
-            if (universityId) {
-                fetch(`/members/majors/${universityId}`)
-                    .then(response => response.json())
-                    .then(data => {
-                        const option = document.createElement("option");
-                        option.value = "";
-                        option.textContent = "선택해주세요.";
-                        majorSelect.appendChild(option);
-                        data.forEach(major => {
-                            const option = document.createElement("option");
-                            option.value = major.id;
-                            option.textContent = major.name;
-                            majorSelect.appendChild(option);
-                        });
-                    })
-                    .catch(error => console.error('Error loading majors:', error));
+            if (password) { // 비밀번호가 입력된 경우
+                if (password !== confirmPassword) {
+                    confirmPasswordField.classList.add("is-invalid");
+                    errorMessage.style.display = "block";
+                    submitButton.disabled = true;
+                } else {
+                    confirmPasswordField.classList.remove("is-invalid");
+                    errorMessage.style.display = "none";
+                    submitButton.disabled = false;
+                }
+            } else { // 비밀번호가 입력되지 않은 경우
+                confirmPasswordField.classList.remove("is-invalid");
+                errorMessage.style.display = "none";
+                submitButton.disabled = false;
             }
         }
     </script>
@@ -83,7 +90,15 @@
         <div class="form-group mb-3">
             <label for="newPassword">새로운 비밀번호</label>
             <input type="password" id="newPassword" th:field="*{password}" class="form-control"
-                   placeholder="새로운 비밀번호를 입력하세요">
+                   placeholder="새로운 비밀번호를 입력하세요" oninput="validatePassword()">
+        </div>
+
+        <!-- 비밀번호 재입력 필드 -->
+        <div class="form-group mb-3">
+            <label for="confirmPassword">비밀번호 재입력</label>
+            <input type="password" id="confirmPassword" class="form-control" placeholder="비밀번호를 다시 입력하세요"
+                   oninput="validatePassword()">
+            <div id="passwordError" class="error-message" style="display: none;">비밀번호가 일치하지 않습니다.</div>
         </div>
 
         <!-- 대학 선택 필드 -->
@@ -110,7 +125,7 @@
 
         <!-- 제출 버튼 -->
         <div class="d-grid gap-2">
-            <button type="submit" class="btn btn-custom btn-lg">정보 수정</button>
+            <button type="submit" id="submitButton" class="btn btn-custom btn-lg">정보 수정</button>
         </div>
 
         <!-- 취소 버튼 -->
