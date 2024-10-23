@@ -4,7 +4,6 @@ import com.studioyunseul.noticeduri.entity.Major;
 import com.studioyunseul.noticeduri.entity.Member;
 import com.studioyunseul.noticeduri.entity.Notice;
 import com.studioyunseul.noticeduri.entity.University;
-import com.studioyunseul.noticeduri.repository.MajorRepository;
 import com.studioyunseul.noticeduri.service.MajorService;
 import jakarta.annotation.PostConstruct;
 import jakarta.persistence.EntityManager;
@@ -24,7 +23,6 @@ import java.util.Random;
 public class Init {
 
     private final InitMemberService initMemberService;
-    private final MajorService majorService;
 
     @PostConstruct
     public void init() {

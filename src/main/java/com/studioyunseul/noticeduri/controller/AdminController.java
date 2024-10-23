@@ -25,7 +25,7 @@ public class AdminController {
     private final MajorService majorService;
 
     @GetMapping("/home")
-    public String home(Model model) {
+    public String home() {
         return "admin/home";
     }
 
