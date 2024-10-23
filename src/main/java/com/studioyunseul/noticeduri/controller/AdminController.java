@@ -4,9 +4,9 @@ import com.studioyunseul.noticeduri.controller.form.MemberUpdateForm;
 import com.studioyunseul.noticeduri.entity.Member;
 import com.studioyunseul.noticeduri.entity.University;
 import com.studioyunseul.noticeduri.repository.MemberSearchCondition;
-import com.studioyunseul.noticeduri.repository.UniversityRepository;
 import com.studioyunseul.noticeduri.service.MajorService;
 import com.studioyunseul.noticeduri.service.MemberService;
+import com.studioyunseul.noticeduri.service.UniversityService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Controller;
@@ -21,8 +21,8 @@ import java.util.List;
 public class AdminController {
 
     private final MemberService memberService;
-    private final UniversityRepository universityRepository;
     private final MajorService majorService;
+    private final UniversityService universityService;
 
     @GetMapping("/home")
     public String home() {
@@ -36,7 +36,7 @@ public class AdminController {
         if (condition.getUniversityId() != null) {
             model.addAttribute("majors", majorService.findAllByUniversityId(condition.getUniversityId(), true));
         }
-        model.addAttribute("universities", universityRepository.findAll());
+        model.addAttribute("universities", universityService.findAll());
         model.addAttribute("pageable", pageable);
         return "admin/members";
     }
@@ -51,7 +51,7 @@ public class AdminController {
         form.setMajorId(member.getMajor().getId());
 
         model.addAttribute("form", form);
-        List<University> universities = universityRepository.findAllByOrderByNameAsc();
+        List<University> universities = universityService.findAllByOrderByNameAsc();
         model.addAttribute("universities", universities);
 
         if (member.getUniversity() != null) {

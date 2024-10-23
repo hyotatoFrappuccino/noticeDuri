@@ -8,7 +8,6 @@ import com.studioyunseul.noticeduri.entity.dto.MemberDto;
 import com.studioyunseul.noticeduri.exception.MemberNotFound;
 import com.studioyunseul.noticeduri.repository.MemberRepository;
 import com.studioyunseul.noticeduri.repository.MemberSearchCondition;
-import com.studioyunseul.noticeduri.repository.UniversityRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -23,7 +22,7 @@ import java.util.List;
 @RequiredArgsConstructor
 public class MemberService {
     private final MemberRepository memberRepository;
-    private final UniversityRepository universityRepository;
+    private final UniversityService universityService;
     private final MajorService majorService;
 
     @Transactional
@@ -56,7 +55,7 @@ public class MemberService {
         if (form.getPassword() != null) {
             member.changePassword(form.getPassword());
         }
-        member.changeUniversity(universityRepository.findById(form.getUniversityId()).orElseThrow());
+        member.changeUniversity(universityService.findById(form.getUniversityId()));
         member.changeMajor(majorService.findById(form.getMajorId()));
     }
 

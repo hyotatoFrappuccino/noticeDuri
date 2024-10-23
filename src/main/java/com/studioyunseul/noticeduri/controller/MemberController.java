@@ -8,9 +8,9 @@ import com.studioyunseul.noticeduri.entity.Member;
 import com.studioyunseul.noticeduri.entity.University;
 import com.studioyunseul.noticeduri.entity.dto.MajorDto;
 import com.studioyunseul.noticeduri.entity.dto.MemberDto;
-import com.studioyunseul.noticeduri.repository.UniversityRepository;
 import com.studioyunseul.noticeduri.service.MajorService;
 import com.studioyunseul.noticeduri.service.MemberService;
+import com.studioyunseul.noticeduri.service.UniversityService;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -30,9 +30,9 @@ import static com.studioyunseul.noticeduri.utils.CookieUtil.expireCookie;
 @RequestMapping(value = "members")
 public class MemberController {
 
-    private final UniversityRepository universityRepository;
     private final MemberService memberService;
     private final MajorService majorService;
+    private final UniversityService universityService;
 
     // 로그인 - Get
     @GetMapping("/login")
@@ -69,7 +69,7 @@ public class MemberController {
     // 회원가입 - Get
     @GetMapping("/new")
     public String createMember(Model model) {
-        List<University> universities = universityRepository.findAllByOrderByNameAsc();
+        List<University> universities = universityService.findAllByOrderByNameAsc();
 
         model.addAttribute("universities", universities);
         model.addAttribute("form", new MemberForm());
@@ -107,7 +107,7 @@ public class MemberController {
 
         model.addAttribute("form", form);
 
-        List<University> universities = universityRepository.findAllByOrderByNameAsc();
+        List<University> universities = universityService.findAllByOrderByNameAsc();
         model.addAttribute("universities", universities);
 
         if (loginMember.getUniversity() != null) {
