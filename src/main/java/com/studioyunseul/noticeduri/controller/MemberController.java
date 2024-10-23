@@ -8,8 +8,8 @@ import com.studioyunseul.noticeduri.entity.Member;
 import com.studioyunseul.noticeduri.entity.University;
 import com.studioyunseul.noticeduri.entity.dto.MajorDto;
 import com.studioyunseul.noticeduri.entity.dto.MemberDto;
-import com.studioyunseul.noticeduri.repository.MajorRepository;
 import com.studioyunseul.noticeduri.repository.UniversityRepository;
+import com.studioyunseul.noticeduri.service.MajorService;
 import com.studioyunseul.noticeduri.service.MemberService;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.Valid;
@@ -31,8 +31,8 @@ import static com.studioyunseul.noticeduri.utils.CookieUtil.expireCookie;
 public class MemberController {
 
     private final UniversityRepository universityRepository;
-    private final MajorRepository majorRepository;
     private final MemberService memberService;
+    private final MajorService majorService;
 
     // 로그인 - Get
     @GetMapping("/login")
@@ -97,7 +97,7 @@ public class MemberController {
             return "redirect:/members/login";
         }
 
-        MemberDto loginMember = memberService.findById(memberId);
+        MemberDto loginMember = memberService.findByIdDto(memberId);
 
         MemberUpdateForm form = new MemberUpdateForm();
         form.setId(loginMember.getId());
@@ -111,8 +111,7 @@ public class MemberController {
         model.addAttribute("universities", universities);
 
         if (loginMember.getUniversity() != null) {
-            List<Major> majors = majorRepository.findByIsDistinctMajorTrueAndUniversityId(loginMember.getUniversity());
-            model.addAttribute("majors", majors);
+            model.addAttribute("majors", majorService.findAllByUniversityId(loginMember.getUniversity(), true));
         }
 
         return "members/myPage";
@@ -132,7 +131,7 @@ public class MemberController {
     @GetMapping("/majors/{universityId}")
     @ResponseBody
     public List<MajorDto> getMajorsByUniversity(@PathVariable Long universityId) {
-        List<Major> majors = majorRepository.findByIsDistinctMajorTrueAndUniversityId(universityId);
+        List<Major> majors = majorService.findAllByUniversityId(universityId, true);
         return majors.stream().map(major -> new MajorDto(major.getId(), major.getName())).collect(Collectors.toList());
     }
 }

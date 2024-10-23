@@ -26,7 +26,7 @@ public class NoticeRepositoryCustomImpl implements NoticeRepositoryCustom {
     }
 
     @Override
-    public Slice<NoticeDto> findByMajorCondition(Pageable pageable, NoticeSearchCondition condition) {
+    public Slice<NoticeDto> findByCondition(Pageable pageable, NoticeSearchCondition condition) {
         List<NoticeDto> content = query
                 .select(new QNoticeDto(notice.title, notice.uploadedDate, notice.url))
                 .from(notice)

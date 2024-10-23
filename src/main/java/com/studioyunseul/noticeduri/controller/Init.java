@@ -5,19 +5,18 @@ import com.studioyunseul.noticeduri.entity.Member;
 import com.studioyunseul.noticeduri.entity.Notice;
 import com.studioyunseul.noticeduri.entity.University;
 import com.studioyunseul.noticeduri.repository.MajorRepository;
+import com.studioyunseul.noticeduri.service.MajorService;
 import jakarta.annotation.PostConstruct;
 import jakarta.persistence.EntityManager;
-import jakarta.persistence.PersistenceContext;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Random;
 
 @Profile("local")
 @Component
@@ -25,6 +24,7 @@ import java.util.List;
 public class Init {
 
     private final InitMemberService initMemberService;
+    private final MajorService majorService;
 
     @PostConstruct
     public void init() {
@@ -35,7 +35,7 @@ public class Init {
     @RequiredArgsConstructor
     static class InitMemberService {
         private final EntityManager em;
-        private final MajorRepository majorRepository;
+        private final MajorService majorService;
 
         @Transactional
         public void init() {
@@ -59,12 +59,12 @@ public class Init {
             Major major3 = new Major("중어중문학과", university2, true);
             em.persist(major3);
 
-            Member member1 = new Member("hyojae", major3, "1234");
-            Member member2 = new Member("dahui", major3, "1234");
+            Member member1 = new Member("whale", major3, "1234");
+            Member member2 = new Member("windows", major3, "1234");
             em.persist(member1);
             em.persist(member2);
 
-            Major major = majorRepository.findById(1L).get();
+            Major major = majorService.findById(1L);
             Notice notice = new Notice(major, "2024년도 10월 교내 학생지원 프로그램 안내", "https://cse.kangwon.ac.kr/cse/community/undergraduate-notice.do?mode=view&articleNo=457851&article.offset=0&articleLimit=10#!/list", LocalDateTime.now());
             em.persist(notice);
 
@@ -81,7 +81,7 @@ public class Init {
             notices.add(new Notice(major3,"2024학년도 전기 졸업대상자 예비졸업사정 상담 실시 안내", "https://cse.kangwon.ac.kr/cse/community/undergraduate-notice.do?mode=view&articleNo=458419&article.offset=0&articleLimit=10#!/list", LocalDateTime.of(2024, 1, 3, 0, 0)));
             notices.add(new Notice(major3,"2024년도 10월 교내 학생지원 프로그램 안내", "https://cse.kangwon.ac.kr/cse/community/undergraduate-notice.do?mode=view&articleNo=457851&article.offset=0&articleLimit=10#!/list", LocalDateTime.of(2024, 1, 4, 0, 0)));
             notices.add(new Notice(major3,"2024-2학기 전공 수업 활동 보조 TA 모집 안내(추가)", "https://cse.kangwon.ac.kr/cse/community/undergraduate-notice.do?mode=view&articleNo=457700&article.offset=0&articleLimit=10#!/list", LocalDateTime.of(2024, 1, 5, 0, 0)));
-            notices.add(new Notice(major3,"제29회 지식재산능력시험(IPAT) 대비 특강 안내", "https://cse.kangwon.ac.kr/cse/community/undergraduate-notice.do?mode=view&articleNo=457552&article.offset=0&articleLimit=10#!/list", LocalDateTime.of(2024, 1, 6, 0, 0)));
+            notices.add(new Notice(major3,"제29회 지식재산능력시험 대비 특강 안내", "https://cse.kangwon.ac.kr/cse/community/undergraduate-notice.do?mode=view&articleNo=457552&article.offset=0&articleLimit=10#!/list", LocalDateTime.of(2024, 1, 6, 0, 0)));
             notices.add(new Notice(major3,"LINC 3.0 취업 성공 동아리 모집 안내", "https://cse.kangwon.ac.kr/cse/community/undergraduate-notice.do?mode=view&articleNo=457456&article.offset=0&articleLimit=10#!/list", LocalDateTime.of(2024, 1, 7, 0, 0)));
             notices.add(new Notice(major3,"2024학년도 Study Buddy 프로그램 안내", "https://cse.kangwon.ac.kr/cse/community/undergraduate-notice.do?mode=view&articleNo=457156&article.offset=0&articleLimit=10#!/list", LocalDateTime.of(2024, 1, 8, 0, 0)));
             notices.add(new Notice(major3,"2024-2학기 전공 수업 활동 보조 TA 모집 안내",  "https://cse.kangwon.ac.kr/cse/community/undergraduate-notice.do?mode=view&articleNo=456658&article.offset=0&articleLimit=10#!/list", LocalDateTime.of(2024, 1, 9, 0, 0)));
@@ -96,6 +96,12 @@ public class Init {
 
             for (Notice notice1 : notices) {
                 em.persist(notice1);
+            }
+
+            for (int i = 0; i < 1000; i++) {
+                Random random = new Random(System.currentTimeMillis());
+                Member member = new Member("test " + i, majorService.findById((long) random.nextInt(1, 14)), "Test");
+                em.persist(member);
             }
         }
     }

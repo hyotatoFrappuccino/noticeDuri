@@ -5,5 +5,5 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Slice;
 
 public interface NoticeRepositoryCustom {
-    Slice<NoticeDto> findByMajorCondition(Pageable pageable, NoticeSearchCondition condition);
+    Slice<NoticeDto> findByCondition(Pageable pageable, NoticeSearchCondition condition);
 }
