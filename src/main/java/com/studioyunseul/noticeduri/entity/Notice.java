@@ -10,11 +10,15 @@ import java.time.LocalDateTime;
 @Entity
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class Notice {
+public class Notice extends BaseEntity {
     @Id
     @GeneratedValue
     @Column(name = "notice_id")
     private Long id;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "university_id")
+    private University university;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "major_id")
@@ -25,6 +29,7 @@ public class Notice {
     private LocalDateTime uploadedDate;
 
     public Notice(Major major, String title, String url, LocalDateTime uploadedDate) {
+        this.university = major.getUniversity();
         this.major = major;
         this.title = title;
         this.url = url;

@@ -5,7 +5,6 @@ import com.studioyunseul.noticeduri.entity.dto.NoticeDto;
 import com.studioyunseul.noticeduri.repository.NoticeSearchCondition;
 import com.studioyunseul.noticeduri.service.MemberService;
 import com.studioyunseul.noticeduri.service.NoticeService;
-import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -32,7 +31,7 @@ public class HomeController {
         }
 
         // 로그인
-        MemberDto loginMember = memberService.findById(memberId);
+        MemberDto loginMember = memberService.findByIdDto(memberId);
         model.addAttribute("member", loginMember);
 
         // 멤버 학과 공지 반환
