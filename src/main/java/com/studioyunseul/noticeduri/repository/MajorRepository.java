@@ -6,7 +6,6 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import java.util.List;
 
 public interface MajorRepository extends JpaRepository<Major, Long> {
-    List<Major> findByUniversityId(Long universityId);
     List<Major> findByIsDistinctMajorFalseAndUniversityId(Long universityId);
     List<Major> findByIsDistinctMajorTrueAndUniversityId(Long universityId);
 }

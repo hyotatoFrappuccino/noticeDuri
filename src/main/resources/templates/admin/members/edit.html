@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <title>멤버 수정</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <script>
+        function loadMajors(universityId) {
+            const majorSelect = document.getElementById("majorId");
+            majorSelect.innerHTML = ""; // 기존 옵션 제거
+
+            if (universityId) {
+                fetch(`/members/majors/${universityId}`)
+                    .then(response => response.json())
+                    .then(data => {
+                        const option = document.createElement("option");
+                        option.value = "";
+                        option.textContent = "선택해주세요.";
+                        majorSelect.appendChild(option);
+                        data.forEach(major => {
+                            const option = document.createElement("option");
+                            option.value = major.id;
+                            option.textContent = major.name;
+                            majorSelect.appendChild(option);
+                        });
+                    })
+                    .catch(error => console.error('Error loading majors:', error));
+            }
+        }
+    </script>
+</head>
+<body>
+<div class="container mt-5">
+    <h1>멤버 수정</h1>
+
+    <form role="form" th:action="@{/admin/members/edit}" th:object="${form}" method="post">
+        <input type="hidden" th:value="*{id}" name="id"/>
+
+        <div class="mb-3">
+            <label for="name" class="form-label">이름</label>
+            <input type="text" class="form-control" id="name" name="name" th:value="*{name}" required>
+        </div>
+
+        <!-- 대학 선택 필드 -->
+        <div class="form-group mb-3">
+            <label for="universityId">대학</label>
+            <select th:field="*{universityId}" id="universityId" class="form-control" onchange="loadMajors(this.value)">
+                <option value="">선택해주세요.</option>
+                <option th:each="university : ${universities}" th:value="${university.id}"
+                        th:text="${university.name}"
+                        th:selected="${form.universityId} == ${university.id}"></option>
+            </select>
+        </div>
+
+        <!-- 학과 선택 필드 -->
+        <div class="form-group mb-4">
+            <label for="majorId">학과</label>
+            <select th:field="*{majorId}" id="majorId" class="form-control" required>
+                <option value="">선택해주세요.</option>
+                <option th:each="major : ${majors}" th:value="${major.id}"
+                        th:text="${major.name}"
+                        th:selected="${form.majorId} == ${major.id}"></option>
+            </select>
+        </div>
+
+
+        <button type="submit" class="btn btn-success">저장</button>
+        <a th:href="@{/admin/members}" class="btn btn-secondary">취소</a>
+    </form>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

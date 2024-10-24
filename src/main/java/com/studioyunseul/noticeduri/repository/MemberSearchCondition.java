@@ -5,10 +5,10 @@ import lombok.Data;
 import java.time.LocalDate;
 
 @Data
-public class NoticeSearchCondition {
+public class MemberSearchCondition {
+    private String name;
     private Long universityId;
     private Long majorId;
-    private String title;
     private LocalDate startDate;
     private LocalDate endDate;
 }
