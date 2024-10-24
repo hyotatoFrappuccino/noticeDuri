@@ -17,6 +17,10 @@ public class Notice extends BaseEntity {
     private Long id;
 
     @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "university_id")
+    private University university;
+
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "major_id")
     private Major major;
 
@@ -25,6 +29,7 @@ public class Notice extends BaseEntity {
     private LocalDateTime uploadedDate;
 
     public Notice(Major major, String title, String url, LocalDateTime uploadedDate) {
+        this.university = major.getUniversity();
         this.major = major;
         this.title = title;
         this.url = url;

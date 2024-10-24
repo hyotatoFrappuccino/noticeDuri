@@ -4,8 +4,10 @@ import com.studioyunseul.noticeduri.controller.form.MemberUpdateForm;
 import com.studioyunseul.noticeduri.entity.Member;
 import com.studioyunseul.noticeduri.entity.University;
 import com.studioyunseul.noticeduri.repository.MemberSearchCondition;
+import com.studioyunseul.noticeduri.repository.NoticeSearchCondition;
 import com.studioyunseul.noticeduri.service.MajorService;
 import com.studioyunseul.noticeduri.service.MemberService;
+import com.studioyunseul.noticeduri.service.NoticeService;
 import com.studioyunseul.noticeduri.service.UniversityService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Pageable;
@@ -23,6 +25,7 @@ public class AdminController {
     private final MemberService memberService;
     private final MajorService majorService;
     private final UniversityService universityService;
+    private final NoticeService noticeService;
 
     @GetMapping("/home")
     public String home() {
@@ -30,7 +33,7 @@ public class AdminController {
     }
 
     @GetMapping("/members")
-    public String members(MemberSearchCondition condition, Pageable pageable, Model model) {
+    public String getMembers(MemberSearchCondition condition, Pageable pageable, Model model) {
         model.addAttribute("members", memberService.findAll(pageable, condition));
         model.addAttribute("condition", condition);
         if (condition.getUniversityId() != null) {
@@ -42,7 +45,7 @@ public class AdminController {
     }
 
     @GetMapping("/members/edit/{id}")
-    public String edit(@PathVariable Long id, Model model) {
+    public String editMember(@PathVariable Long id, Model model) {
         Member member = memberService.findById(id);
         MemberUpdateForm form = new MemberUpdateForm();
         form.setId(member.getId());
@@ -67,9 +70,21 @@ public class AdminController {
     }
 
     @PostMapping("/members/delete/{id}")
-    public String delete(@PathVariable Long id) {
+    public String deleteMember(@PathVariable Long id) {
         memberService.deleteById(id);
         return "redirect:/admin/members";
+    }
+
+    @GetMapping("/notices")
+    public String getNotices(NoticeSearchCondition condition, Pageable pageable, Model model) {
+        model.addAttribute("notices", noticeService.getAllNotices(pageable, condition));
+        model.addAttribute("condition", condition);
+        if (condition.getUniversityId() != null) {
+            model.addAttribute("majors", majorService.findAllByUniversityId(condition.getUniversityId(), true));
+        }
+        model.addAttribute("universities", universityService.findAll());
+        model.addAttribute("pageable", pageable);
+        return "admin/notices";
     }
 
 }

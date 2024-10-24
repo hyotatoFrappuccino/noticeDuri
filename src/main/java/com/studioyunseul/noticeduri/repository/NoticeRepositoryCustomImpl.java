@@ -1,18 +1,25 @@
 package com.studioyunseul.noticeduri.repository;
 
 import com.querydsl.core.types.dsl.BooleanExpression;
+import com.querydsl.core.types.dsl.DateTimePath;
+import com.querydsl.jpa.impl.JPAQuery;
 import com.querydsl.jpa.impl.JPAQueryFactory;
+import com.studioyunseul.noticeduri.entity.Notice;
 import com.studioyunseul.noticeduri.entity.dto.NoticeDto;
 import com.studioyunseul.noticeduri.entity.dto.QNoticeDto;
 import jakarta.persistence.EntityManager;
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Slice;
 import org.springframework.data.domain.SliceImpl;
+import org.springframework.data.support.PageableExecutionUtils;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
 
+import static com.studioyunseul.noticeduri.entity.QMember.member;
 import static com.studioyunseul.noticeduri.entity.QNotice.*;
 import static org.springframework.util.StringUtils.*;
 
@@ -26,13 +33,13 @@ public class NoticeRepositoryCustomImpl implements NoticeRepositoryCustom {
     }
 
     @Override
-    public Slice<NoticeDto> findByCondition(Pageable pageable, NoticeSearchCondition condition) {
+    public Slice<NoticeDto> findByConditionSlice(Pageable pageable, NoticeSearchCondition condition) {
         List<NoticeDto> content = query
                 .select(new QNoticeDto(notice.title, notice.uploadedDate, notice.url))
                 .from(notice)
                 .where(majorEq(condition.getMajorId()),
                         titleContains(condition.getTitle()),
-                        dateBetween(condition.getStartDate(), condition.getEndDate())
+                        dateBetween(notice.uploadedDate, condition.getStartDate(), condition.getEndDate())
                 )
                 .orderBy(notice.uploadedDate.desc())
                 .offset(pageable.getOffset())
@@ -48,6 +55,36 @@ public class NoticeRepositoryCustomImpl implements NoticeRepositoryCustom {
         return new SliceImpl<>(content, pageable, hasNext);
     }
 
+    @Override
+    public Page<Notice> findByConditionPage(Pageable pageable, NoticeSearchCondition condition) {
+        List<Notice> content = query
+                .selectFrom(notice)
+                .where(universityEq(condition.getUniversityId()),
+                        majorEq(condition.getMajorId()),
+                        titleContains(condition.getTitle()),
+                        dateBetween(notice.uploadedDate, condition.getStartDate(), condition.getEndDate())
+                )
+                .orderBy(notice.uploadedDate.desc())
+                .offset(pageable.getOffset())
+                .limit(pageable.getPageSize())
+                .fetch();
+
+        JPAQuery<Long> countQuery = query
+                .select(notice.count())
+                .from(notice)
+                .where(universityEq(condition.getUniversityId()),
+                        majorEq(condition.getMajorId()),
+                        titleContains(condition.getTitle()),
+                        dateBetween(notice.uploadedDate, condition.getStartDate(), condition.getEndDate())
+                );
+
+        return PageableExecutionUtils.getPage(content, pageable, countQuery::fetchOne);
+    }
+
+    private BooleanExpression universityEq(Long universityId) {
+        return universityId != null ? notice.university.id.eq(universityId) : null;
+    }
+
     private BooleanExpression majorEq(Long majorId) {
         return majorId != null ? notice.major.id.eq(majorId) : null;
     }
@@ -56,19 +93,19 @@ public class NoticeRepositoryCustomImpl implements NoticeRepositoryCustom {
         return hasText(title) ? notice.title.contains(title) : null;
     }
 
-    private BooleanExpression dateBetween(LocalDateTime startDate, LocalDateTime endDate) {
+    private BooleanExpression dateBetween(DateTimePath<LocalDateTime> date, LocalDate startDate, LocalDate endDate) {
         if (startDate == null && endDate == null) {
             return null;
         }
 
         if (endDate == null) {
-            endDate = LocalDateTime.now();
+            endDate = LocalDate.now();
         }
 
         if (startDate == null) {
-            startDate = LocalDateTime.of(2000, 1, 1, 0, 0);
+            startDate = LocalDate.of(2000, 1, 1);
         }
 
-        return notice.uploadedDate.between(startDate, endDate);
+        return date.between(startDate.atStartOfDay(), endDate.atStartOfDay().plusDays(1));
     }
 }
