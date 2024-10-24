@@ -19,7 +19,6 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
 
-import static com.studioyunseul.noticeduri.entity.QMember.member;
 import static com.studioyunseul.noticeduri.entity.QNotice.*;
 import static org.springframework.util.StringUtils.*;
 

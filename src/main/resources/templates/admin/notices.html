@@ -130,6 +130,7 @@
         <tr>
             <th>ID</th>
             <th>제목</th>
+            <th>URL</th>
             <th>대학</th>
             <th>학과</th>
             <th>생성일</th>
@@ -140,6 +141,9 @@
         <tr th:each="notice : ${notices}">
             <td th:text="${notice.id}">1</td>
             <td th:text="${notice.title}">홍길동</td>
+            <td>
+                <a th:href="${notice.url}" target="_blank">바로가기</a>
+            </td>
             <td th:text="${notice.university.getName()}">서울대학교</td>
             <td th:text="${notice.major.getName()}">컴퓨터공학과</td>
             <td th:text="${notice.uploadedDate != null} ? ${#temporals.format(notice.uploadedDate, 'yyyy-MM-dd')}">2024-01-01</td>
