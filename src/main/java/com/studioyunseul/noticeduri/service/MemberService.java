@@ -29,9 +29,10 @@ public class MemberService {
     public Long join(MemberForm memberForm) {
         String name = memberForm.getName();
         String password = memberForm.getPassword();
+        Long kakaoId = memberForm.getKakaoId();
         Major major = majorService.findById(memberForm.getMajorId());
 
-        Member member = new Member(name, major, password);
+        Member member = new Member(name, major, password, kakaoId);
         return memberRepository.save(member).getId();
     }
 
@@ -39,13 +40,17 @@ public class MemberService {
         return memberRepository.findByNameAndPassword(name, password);
     }
 
-    public MemberDto findByIdDto(Long id) {
+    public MemberDto findDtoById(Long id) {
         Member member = memberRepository.findById(id).orElseThrow(MemberNotFound::new);
         return convertToDto(member);
     }
 
     public Member findById(Long id) {
         return memberRepository.findById(id).orElseThrow(MemberNotFound::new);
+    }
+
+    public Member findByKakaoId(Long kakaoId) {
+        return memberRepository.findByKakaoId(kakaoId);
     }
 
     @Transactional

@@ -31,7 +31,7 @@ public class HomeController {
         }
 
         // 로그인
-        MemberDto loginMember = memberService.findByIdDto(memberId);
+        MemberDto loginMember = memberService.findDtoById(memberId);
         model.addAttribute("member", loginMember);
 
         // 멤버 학과 공지 반환

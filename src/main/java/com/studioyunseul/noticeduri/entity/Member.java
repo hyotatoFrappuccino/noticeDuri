@@ -4,6 +4,7 @@ import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 @Entity
 @Getter
@@ -13,6 +14,8 @@ public class Member extends BaseEntity {
     @GeneratedValue
     @Column(name = "member_id")
     private Long id;
+
+    private Long kakaoId;
 
     private String name;
     private String password;
@@ -25,11 +28,12 @@ public class Member extends BaseEntity {
     @JoinColumn(name = "major_id")
     private Major major;
 
-    public Member(String name, Major major, String password) {
+    public Member(String name, Major major, String password, Long kakaoId) {
         this.name = name;
         this.university = major.getUniversity();
         this.major = major;
         this.password = password;
+        this.kakaoId = kakaoId;
     }
 
     public void changeName(String name) {

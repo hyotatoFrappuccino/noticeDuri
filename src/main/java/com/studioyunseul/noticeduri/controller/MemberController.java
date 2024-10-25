@@ -14,12 +14,14 @@ import com.studioyunseul.noticeduri.service.UniversityService;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.UUID;
 import java.util.stream.Collectors;
 
 import static com.studioyunseul.noticeduri.utils.CookieUtil.addMemberCookie;
@@ -34,9 +36,16 @@ public class MemberController {
     private final MajorService majorService;
     private final UniversityService universityService;
 
+    @Value("${kakao.client_id}")
+    private String client_id;
+
+    @Value("${kakao.redirect_uri}")
+    private String redirect_uri;
+
     // 로그인 - Get
     @GetMapping("/login")
     public String login(Model model) {
+        model.addAttribute("kakaoLoginLocation", "https://kauth.kakao.com/oauth/authorize?response_type=code&client_id=" + client_id + "&redirect_uri=" + redirect_uri);
         model.addAttribute("form", new LoginForm());
         return "members/login";
     }
@@ -78,14 +87,17 @@ public class MemberController {
     }
 
     // 회원가입 - Post
-    @PostMapping("/new")
+    @PostMapping(value = {"/new", "/callback"})
     public String createMember(@Valid @ModelAttribute("form") MemberForm form, BindingResult result, HttpServletResponse response) {
         if (result.hasErrors()) {
             return "members/createMemberForm";
         }
 
-        Long memberId = memberService.join(form);
+        if (form.getPassword() == null) {
+            form.setPassword(UUID.randomUUID().toString());
+        }
 
+        Long memberId = memberService.join(form);
         addMemberCookie(response, memberId);
 
         return "redirect:/";
@@ -97,7 +109,7 @@ public class MemberController {
             return "redirect:/members/login";
         }
 
-        MemberDto loginMember = memberService.findByIdDto(memberId);
+        MemberDto loginMember = memberService.findDtoById(memberId);
 
         MemberUpdateForm form = new MemberUpdateForm();
         form.setId(loginMember.getId());
