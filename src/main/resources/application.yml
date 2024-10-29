@@ -18,3 +18,7 @@ spring:
 logging.level:
   org.hibernate.SQL: debug
 #  org.hibernate.type: trace
+
+kakao:
+  client_id: 003481d0937b60feb487017be2d8ec1a
+  redirect_uri: http://localhost:8080/members/callback

@@ -55,8 +55,8 @@ public class Init {
             Major major3 = new Major("중어중문학과", university2, true);
             em.persist(major3);
 
-            Member member1 = new Member("whale", major3, "1234");
-            Member member2 = new Member("windows", major3, "1234");
+            Member member1 = new Member("whale", major3, "1234", null);
+            Member member2 = new Member("windows", major3, "1234", null);
             em.persist(member1);
             em.persist(member2);
 
@@ -114,7 +114,7 @@ public class Init {
                 Random random = new Random(System.currentTimeMillis());
                 Collections.shuffle(firstName);
                 Collections.shuffle(lastName);
-                Member member = new Member(firstName.get(0) + lastName.get(0) + lastName.get(1) + i, majorService.findById((long) random.nextInt(1, 12)), "Test");
+                Member member = new Member(firstName.get(0) + lastName.get(0) + lastName.get(1) + i, majorService.findById((long) random.nextInt(1, 12)), "Test", null);
                 em.persist(member);
             }
         }

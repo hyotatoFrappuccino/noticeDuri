@@ -93,10 +93,10 @@
         </div>
 
         <!-- 비밀번호 입력 필드 -->
-        <div class="form-group mb-3">
+        <div class="form-group mb-3" th:if="${form.kakaoId == null}">
             <label for="password">비밀번호</label>
             <input type="password" id="password" th:field="*{password}" class="form-control" placeholder="비밀번호를 입력하세요"
-                   required>
+                   th:attr="required=${form.kakaoId == null}">
             <div class="field-error" th:errors="*{password}"></div>
             <small class="text-muted">비밀번호 보안이 중요합니다. 안전한 비밀번호를 사용하세요.</small>
         </div>
@@ -118,6 +118,9 @@
                 <option value="">선택해주세요.</option>
             </select>
         </div>
+
+        <!-- 숨겨진 kakaoId 필드 -->
+        <input type="hidden" th:field="*{kakaoId}">
 
         <!-- 제출 버튼 -->
         <div class="d-grid gap-2">

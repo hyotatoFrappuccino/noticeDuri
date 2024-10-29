@@ -15,6 +15,8 @@ public class MemberForm {
     @NotEmpty
     private String password;
 
+    private Long kakaoId;
+
     @NotNull
     private Long universityId;
 
