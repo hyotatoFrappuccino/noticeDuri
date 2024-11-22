@@ -11,6 +11,8 @@ import com.studioyunseul.noticeduri.entity.dto.MemberDto;
 import com.studioyunseul.noticeduri.service.MajorService;
 import com.studioyunseul.noticeduri.service.MemberService;
 import com.studioyunseul.noticeduri.service.UniversityService;
+import com.studioyunseul.noticeduri.web.session.SessionManager;
+import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -24,9 +26,6 @@ import java.util.List;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
-import static com.studioyunseul.noticeduri.utils.CookieUtil.addMemberCookie;
-import static com.studioyunseul.noticeduri.utils.CookieUtil.expireCookie;
-
 @Controller
 @RequiredArgsConstructor
 @RequestMapping(value = "members")
@@ -35,6 +34,7 @@ public class MemberController {
     private final MemberService memberService;
     private final MajorService majorService;
     private final UniversityService universityService;
+    private final SessionManager sessionManager;
 
     @Value("${kakao.client_id}")
     private String client_id;
@@ -50,7 +50,8 @@ public class MemberController {
         return "members/login";
     }
 
-    // 로그인 - Post
+
+  // 로그인 - Post
     @PostMapping("/login")
     public String login(@Valid @ModelAttribute("form") LoginForm form, BindingResult result, HttpServletResponse response) {
         if (result.hasErrors()) {
@@ -64,14 +65,16 @@ public class MemberController {
             return "members/login";
         }
 
-        addMemberCookie(response, loginMember.getId());
+        sessionManager.createSession(loginMember, response);
+//        addMemberCookie(response, loginMember.getId());
 
         return "redirect:/";
     }
 
     @PostMapping("/logout")
-    public String logout(HttpServletResponse response) {
-        expireCookie(response, "memberId");
+    public String logout(HttpServletRequest request) {
+        sessionManager.expireSession(request);
+//        expireCookie(response, "memberId");
         return "redirect:/";
     }
 
@@ -98,18 +101,20 @@ public class MemberController {
         }
 
         Long memberId = memberService.join(form);
-        addMemberCookie(response, memberId);
+        sessionManager.createSession(memberService.findById(memberId), response);
+//        addMemberCookie(response, memberId);
 
         return "redirect:/";
     }
 
     @GetMapping("/myPage")
-    public String myPage(@CookieValue(name = "memberId", required = false) Long memberId, Model model) {
-        if (memberId == null) {
+    public String myPage(HttpServletRequest request, Model model) {
+        Member member = (Member) sessionManager.getSession(request);
+        if (member == null) {
             return "redirect:/members/login";
         }
 
-        MemberDto loginMember = memberService.findDtoById(memberId);
+        MemberDto loginMember = memberService.findDtoById(member.getId());
 
         MemberUpdateForm form = new MemberUpdateForm();
         form.setId(loginMember.getId());

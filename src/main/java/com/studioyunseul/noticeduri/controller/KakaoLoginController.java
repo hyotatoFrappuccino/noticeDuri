@@ -7,7 +7,7 @@ import com.studioyunseul.noticeduri.entity.dto.KakaoUserInfoResponseDto;
 import com.studioyunseul.noticeduri.service.KakaoService;
 import com.studioyunseul.noticeduri.service.MemberService;
 import com.studioyunseul.noticeduri.service.UniversityService;
-import com.studioyunseul.noticeduri.utils.CookieUtil;
+import com.studioyunseul.noticeduri.web.session.SessionManager;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
@@ -24,6 +24,7 @@ public class KakaoLoginController {
     private final KakaoService kakaoService;
     private final MemberService memberService;
     private final UniversityService universityService;
+    private final SessionManager sessionManager;
 
     @GetMapping("/members/callback")
     public String callback(@RequestParam("code") String code, Model model, HttpServletResponse response) {
@@ -49,7 +50,8 @@ public class KakaoLoginController {
         }
 
         //로그인
-        CookieUtil.addMemberCookie(response, loginMember.getId());
+        sessionManager.createSession(loginMember, response);
+//        CookieUtil.addMemberCookie(response, loginMember.getId());
         return "redirect:/";
     }
 }

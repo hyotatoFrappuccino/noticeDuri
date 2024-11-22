@@ -1,17 +1,23 @@
 package com.studioyunseul.noticeduri.exception;
 
-import jakarta.servlet.http.HttpServletResponse;
+import com.studioyunseul.noticeduri.web.session.SessionManager;
+import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
-
-import static com.studioyunseul.noticeduri.utils.CookieUtil.expireCookie;
 
 @ControllerAdvice
 public class GlobalExceptionHandler {
 
+    private final SessionManager sessionManager;
+
+    public GlobalExceptionHandler(SessionManager sessionManager) {
+        this.sessionManager = sessionManager;
+    }
+
     @ExceptionHandler(MemberNotFound.class)
-    public String memberNotFound(HttpServletResponse response) {
-        expireCookie(response, "memberId");
+    public String memberNotFound(HttpServletRequest request) {
+        sessionManager.expireSession(request);
+//        expireCookie(response, "memberId");
         return "redirect:/members/login";
     }
 }
