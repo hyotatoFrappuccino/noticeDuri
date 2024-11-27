@@ -5,8 +5,7 @@ import com.studioyunseul.noticeduri.entity.dto.NoticeDto;
 import com.studioyunseul.noticeduri.repository.NoticeSearchCondition;
 import com.studioyunseul.noticeduri.service.MemberService;
 import com.studioyunseul.noticeduri.service.NoticeService;
-import com.studioyunseul.noticeduri.web.session.SessionManager;
-import jakarta.servlet.http.HttpServletRequest;
+import com.studioyunseul.noticeduri.web.session.SessionConst;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -16,6 +15,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.SessionAttribute;
 
 @Controller
 @RequiredArgsConstructor
@@ -23,19 +23,13 @@ public class HomeController {
 
     private final MemberService memberService;
     private final NoticeService noticeService;
-    private final SessionManager sessionManager;
 
     // 홈 화면
     @GetMapping("/")
-    public String home(HttpServletRequest request, Model model, Pageable pageable) {
-//    public String home (@CookieValue(name = "memberId", required = false) Long memberId, Model model, Pageable pageable){
-        Member loginMember = (Member) sessionManager.getSession(request);
+    public String home(@SessionAttribute(name = SessionConst.LOGIN_MEMBER, required = false) Member loginMember, Model model, Pageable pageable) {
         if (loginMember == null) {
             return "redirect:/members/login";
         }
-
-        // 로그인
-//        MemberDto loginMember = memberService.findDtoById(memberId);
         model.addAttribute("member", loginMember);
 
         // 멤버 학과 공지 반환
