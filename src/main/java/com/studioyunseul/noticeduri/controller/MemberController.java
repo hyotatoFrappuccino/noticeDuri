@@ -11,7 +11,9 @@ import com.studioyunseul.noticeduri.entity.dto.MemberDto;
 import com.studioyunseul.noticeduri.service.MajorService;
 import com.studioyunseul.noticeduri.service.MemberService;
 import com.studioyunseul.noticeduri.service.UniversityService;
-import jakarta.servlet.http.HttpServletResponse;
+import com.studioyunseul.noticeduri.web.session.SessionConst;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpSession;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
@@ -23,9 +25,6 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 import java.util.UUID;
 import java.util.stream.Collectors;
-
-import static com.studioyunseul.noticeduri.utils.CookieUtil.addMemberCookie;
-import static com.studioyunseul.noticeduri.utils.CookieUtil.expireCookie;
 
 @Controller
 @RequiredArgsConstructor
@@ -50,9 +49,9 @@ public class MemberController {
         return "members/login";
     }
 
-    // 로그인 - Post
+  // 로그인 - Post
     @PostMapping("/login")
-    public String login(@Valid @ModelAttribute("form") LoginForm form, BindingResult result, HttpServletResponse response) {
+    public String login(@Valid @ModelAttribute("form") LoginForm form, BindingResult result, HttpServletRequest request) {
         if (result.hasErrors()) {
             return "members/login";
         }
@@ -64,14 +63,22 @@ public class MemberController {
             return "members/login";
         }
 
-        addMemberCookie(response, loginMember.getId());
+
+        //세션이 있으면 반환, 없으면 신규 세션 생성
+        HttpSession session = request.getSession();
+        //세션에 로그인 회원 정보 보관
+        session.setAttribute(SessionConst.LOGIN_MEMBER, loginMember);
 
         return "redirect:/";
     }
 
     @PostMapping("/logout")
-    public String logout(HttpServletResponse response) {
-        expireCookie(response, "memberId");
+    public String logout(HttpServletRequest request) {
+        HttpSession session = request.getSession(false);
+        // 세션 제거
+        if (session != null) {
+            session.invalidate();
+        }
         return "redirect:/";
     }
 
@@ -88,7 +95,7 @@ public class MemberController {
 
     // 회원가입 - Post
     @PostMapping(value = {"/new", "/callback"})
-    public String createMember(@Valid @ModelAttribute("form") MemberForm form, BindingResult result, HttpServletResponse response) {
+    public String createMember(@Valid @ModelAttribute("form") MemberForm form, BindingResult result, HttpServletRequest request) {
         if (result.hasErrors()) {
             return "members/createMemberForm";
         }
@@ -98,18 +105,20 @@ public class MemberController {
         }
 
         Long memberId = memberService.join(form);
-        addMemberCookie(response, memberId);
+
+        HttpSession session = request.getSession();
+        session.setAttribute(SessionConst.LOGIN_MEMBER, memberService.findById(memberId));
 
         return "redirect:/";
     }
 
     @GetMapping("/myPage")
-    public String myPage(@CookieValue(name = "memberId", required = false) Long memberId, Model model) {
-        if (memberId == null) {
+    public String myPage(@SessionAttribute(name = SessionConst.LOGIN_MEMBER, required = false) Member member, Model model) {
+        if (member == null) {
             return "redirect:/members/login";
         }
 
-        MemberDto loginMember = memberService.findDtoById(memberId);
+        MemberDto loginMember = memberService.findDtoById(member.getId());
 
         MemberUpdateForm form = new MemberUpdateForm();
         form.setId(loginMember.getId());

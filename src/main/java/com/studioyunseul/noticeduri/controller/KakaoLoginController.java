@@ -7,8 +7,9 @@ import com.studioyunseul.noticeduri.entity.dto.KakaoUserInfoResponseDto;
 import com.studioyunseul.noticeduri.service.KakaoService;
 import com.studioyunseul.noticeduri.service.MemberService;
 import com.studioyunseul.noticeduri.service.UniversityService;
-import com.studioyunseul.noticeduri.utils.CookieUtil;
-import jakarta.servlet.http.HttpServletResponse;
+import com.studioyunseul.noticeduri.web.session.SessionConst;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -26,7 +27,7 @@ public class KakaoLoginController {
     private final UniversityService universityService;
 
     @GetMapping("/members/callback")
-    public String callback(@RequestParam("code") String code, Model model, HttpServletResponse response) {
+    public String callback(@RequestParam("code") String code, Model model, HttpServletRequest request) {
         String accessToken = kakaoService.getAccessTokenFromKakao(code);
         KakaoUserInfoResponseDto userInfo = kakaoService.getUserInfo(accessToken);
 
@@ -49,7 +50,8 @@ public class KakaoLoginController {
         }
 
         //로그인
-        CookieUtil.addMemberCookie(response, loginMember.getId());
+        HttpSession session = request.getSession();
+        session.setAttribute(SessionConst.LOGIN_MEMBER, loginMember);
         return "redirect:/";
     }
 }
