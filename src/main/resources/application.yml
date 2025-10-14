@@ -19,6 +19,7 @@ server:
   servlet:
     session:
       tracking-modes: cookie
+  port: 8080
 
 logging.level:
   org.hibernate.SQL: debug
@@ -26,4 +27,4 @@ logging.level:
 
 kakao:
   client_id: 003481d0937b60feb487017be2d8ec1a
-  redirect_uri: http://localhost:8080/members/callback
+  redirect_uri: http://localhost:${server.port}/members/callback #카카오 설정에서 포트 8080으로 되어있음

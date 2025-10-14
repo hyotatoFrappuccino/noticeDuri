@@ -87,4 +87,11 @@ public class AdminController {
         return "admin/notices";
     }
 
+    @GetMapping("/notices/edit/{id}")
+    public String editNotice(@PathVariable Long id, Model model) {
+//        todo
+//
+        return "admin/notices/edit";
+    }
+
 }
